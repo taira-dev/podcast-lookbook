@@ -207,7 +207,7 @@
     <div class="tbl"><table id="allrefs"></table></div>
   </section>
 
-  <footer>Podcast Lookbook v1（2026-10）。参考動画の著作権は各権利者に帰属します。プレビューの人物はAI生成の見本で、実在の人物ではありません。</footer>
+  <footer>Podcast Lookbook v1（2026-10）。参考動画の著作権は各権利者に帰属します。プレビューの人物とスタジオの見本はAI生成で、実在の人物ではありません。</footer>
 </div>
 <div class="toast" id="toast"></div>
 
@@ -221,20 +221,27 @@
     solo:  ["今日は、私が独立した理由をお話しします"]
   };
   var SHOT_EMPH = { wide:"人に会い続けた1年", close:"売上ゼロの半年", solo:"独立した理由" };
-  var SHOT_SPK  = { wide:[0,1], close:[1], solo:[0] };   // 行ごとの話者（0=ホスト, 1=ゲスト）
+  var SHOT_SPK  = { wide:[0,1], close:[1], solo:[0] };   // 行ごとの話者（0=ホスト, 1=ゲスト）。引き=ホストが先に話し、ゲストが返す
   var FONTS = { mincho:"明朝", gothic:"ゴシック", maru:"丸ゴシック" };
   var FONT_CSS = { mincho:"var(--f-mincho)", gothic:"var(--f-gothic)", maru:"var(--f-maru)" };
 
   // ---------- スタジオ（背景の見本。pos は object-position、prof はプロフィールカードを置く側） ----------
+  // 引きの2人と寄りは同じ人物（AI生成）。split は引きと同じ左右の並び、pip はゲストの寄りにホストの小窓
   var STUDIOS = {
-    a: { label:"スタジオA", shots:{
+    a: { label:"スタジオA（黒背景）", shots:{
           wide:{src:"img/shot_wide.jpg", pos:"50% 50%", prof:"center"},
-          close:{src:"img/shot_close.jpg", pos:"38% 50%", prof:"right"},
-          solo:{src:"img/shot_solo.jpg", pos:"50% 45%", prof:"right"} },
-         split:{ left:{shot:"solo", pos:"50% 40%"}, right:{shot:"close", pos:"42% 50%"} },
-         pip:{ main:{shot:"close", pos:"38% 50%"}, small:{shot:"solo", pos:"50% 40%"} } }
+          close:{src:"img/shot_close.jpg", pos:"40% 50%", prof:"right"},
+          solo:{src:"img/shot_solo.jpg", pos:"62% 50%", prof:"left"} },
+         split:{ left:{shot:"close", pos:"42% 50%"}, right:{shot:"solo", pos:"60% 50%"} },
+         pip:{ main:{shot:"close", pos:"40% 50%"}, small:{shot:"solo", pos:"62% 50%"} } },
+    aikagi: { label:"AiKAGIスタジオ（白背景）", shots:{
+          wide:{src:"img/aikagi_wide.jpg", pos:"50% 50%", prof:"center"},
+          close:{src:"img/aikagi_close.jpg", pos:"55% 50%", prof:"left"},
+          solo:{src:"img/aikagi_solo.jpg", pos:"58% 50%", prof:"left"} },
+         split:{ left:{shot:"solo", pos:"58% 50%"}, right:{shot:"close", pos:"55% 50%"} },
+         pip:{ main:{shot:"close", pos:"55% 50%"}, small:{shot:"solo", pos:"58% 50%"} } }
   };
-  var STUDIO_ORDER = ["a"];
+  var STUDIO_ORDER = ["a", "aikagi"];
 
   // ---------- 既定（どのパターンにも無い項目はこれ） ----------
   var BASE = {
@@ -453,8 +460,13 @@
     if(r){
       $("refMeta").textContent = r.program+"（"+r.channel+"）・"+fmt(r.start)+"〜";
       $("refSeen").textContent = "画面で見えるもの: "+r.seen;
-      var im=document.createElement("img"); im.alt=r.program; im.src="https://i.ytimg.com/vi/"+encodeURIComponent(r.id)+"/maxresdefault.jpg";
-      im.onerror=function(){ im.onerror=null; im.src="https://i.ytimg.com/vi/"+encodeURIComponent(r.id)+"/hqdefault.jpg"; };
+      var im=document.createElement("img"); im.alt=r.program;
+      if(r.frame){ // 該当カットの静止画（出典は下のメタ欄に併記）
+        im.src=r.frame; im.onerror=function(){ im.onerror=null; im.src="https://i.ytimg.com/vi/"+encodeURIComponent(r.id)+"/maxresdefault.jpg"; };
+      }else{
+        im.src="https://i.ytimg.com/vi/"+encodeURIComponent(r.id)+"/maxresdefault.jpg";
+        im.onerror=function(){ im.onerror=null; im.src="https://i.ytimg.com/vi/"+encodeURIComponent(r.id)+"/hqdefault.jpg"; };
+      }
       th.appendChild(im);
       var pl=document.createElement("span"); pl.className="play"; th.appendChild(pl);
       var tm=document.createElement("span"); tm.className="tm"; tm.textContent=fmt(r.start)+"から再生"; th.appendChild(tm);

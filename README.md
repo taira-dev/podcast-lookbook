@@ -34,9 +34,9 @@
     "title": { "on": true, "style": "band|white|dark", "pos": "tl|tr", "text": "..." },
     "logo":  { "on": true, "pos": "tr|tl|br|bl", "style": "plate|transparent", "size": 1.0 },
     "name":  { "on": false, "pos": "bl|br", "style": "white|dark" },
-    "prof":  { "on": false, "style": "white|dark|timeline" },
+    "prof":  { "on": false, "style": "white|dark|timeline", "pos": "auto|left|center|right", "y": "middle|top" },
     "digest": false,
-    "cam": "auto|wide|split",
+    "cam": "auto|wide|split|pip",
     "bgm": "none|light|ask"
   }
 }
