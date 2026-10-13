@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Podcast Lookbook ヒアリングシート</title>
+<meta name="description" content="打ち合わせで質問に答えていくと、おすすめの編集パターンと見え方が出て、結果をそのままAIに送れるヒアリングシート">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Noto+Sans+JP:wght@500;700;900&family=Zen+Maru+Gothic:wght@700;900&display=swap">
+<link rel="stylesheet" href="lookbook.css">
+<style>
+  /* 構成: 左=質問（ボタンで選ぶ）／右=結果（おすすめパターン・見え方・コピー）。右は追従 */
+  .grid{display:grid;grid-template-columns:minmax(0,1fr) 440px;gap:24px;margin-top:18px;align-items:start}
+  .col{min-width:0}
+  .qlist{display:grid;gap:10px}
+  .q{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .q.done{border-color:var(--ok)}
+  .q .qt{display:flex;align-items:baseline;gap:8px;font-weight:700;font-size:14px;margin-bottom:8px}
+  .q .qt .no{font-family:var(--display);color:var(--accent);font-weight:900;font-variant-numeric:tabular-nums;min-width:1.6em}
+  .q .qt .why{font-weight:500;font-size:12px;color:var(--muted);margin-left:auto}
+  .opts{display:flex;flex-wrap:wrap;gap:6px}
+  .opt{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;font-size:13px;cursor:pointer;line-height:1.3}
+  .opt:hover{border-color:var(--ink)}
+  .opt[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .opt.any[aria-pressed="true"]{background:var(--accent);border-color:var(--accent)}
+  .q.off{opacity:.5}
+  .basic{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 12px}
+  .basic label{display:flex;flex-direction:column;font-size:12px;color:var(--muted);gap:3px}
+  .basic input,.free textarea,.free input{border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:#fff;font-size:13px;width:100%}
+  .free{display:grid;gap:8px}
+  .free label{display:flex;flex-direction:column;font-size:12px;color:var(--muted);gap:3px}
+  .free textarea{min-height:56px;resize:vertical}
+  .result{position:sticky;top:12px}
+  .result .box{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .result h2{font-family:var(--display);font-size:18px;margin:0 0 2px;font-weight:700}
+  .result .pname{font-size:15px;font-weight:700;margin:6px 0 2px}
+  .result .pname .num{font-family:var(--display);color:var(--accent);font-weight:900;margin-right:6px}
+  .result .pdesc{font-size:12px;color:var(--muted);margin:0 0 10px}
+  .tabs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+  .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .prog{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-top:10px}
+  .prog .bar{flex:1;height:6px;background:var(--soft);border-radius:3px;overflow:hidden}
+  .prog .bar i{display:block;height:100%;background:var(--ok);width:0}
+  .omk{font-size:12px;color:var(--muted);margin-top:8px}
+  @media (max-width:900px){ .grid{grid-template-columns:1fr} .result{position:static;order:-1} .basic{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><a href="index.html">Podcast Lookbook</a><small>ヒアリングシート</small></div>
+    <p class="lead">打ち合わせで上から順に押していくだけ。「おまかせ」は編集側で決める項目として依頼文に残ります。答えに合わせて右（スマホは上）におすすめのパターンと見え方が出ます。</p>
+    <nav class="nav"><a href="index.html">見本帳</a><a href="hearing.html" aria-current="page">ヒアリングシート</a></nav>
+  </header>
+
+  <div class="grid">
+    <div class="col">
+      <p class="label">基本情報</p>
+      <div class="q basic" id="basic">
+        <label>クライアント・会社名<input type="text" id="f_client" placeholder="例: 株式会社サンプル"></label>
+        <label>番組名（仮でも可）<input type="text" id="f_program" placeholder="例: サンプルの経営談義"></label>
+        <label>ホスト・ゲスト<input type="text" id="f_people" placeholder="例: 山田（ホスト）×毎回ゲスト1名"></label>
+        <label>打ち合わせ日<input type="date" id="f_date"></label>
+      </div>
+      <p class="label" style="margin-top:16px">質問</p>
+      <div class="qlist" id="qlist"></div>
+      <p class="label" style="margin-top:16px">自由記述</p>
+      <div class="q free">
+        <label>参考にしたい番組・動画（URLや番組名）<input type="text" id="f_ref" placeholder="例: ○○チャンネルの△△回のような字幕"></label>
+        <label>1本の尺・本数・頻度<input type="text" id="f_volume" placeholder="例: 30分×月2本"></label>
+        <label>納期・初回の公開予定<input type="text" id="f_due" placeholder="例: 初回は11月末に公開したい"></label>
+        <label>その他の要望・NG<textarea id="f_memo" placeholder="例: 会社ロゴは必ず入れる／数字の誤字は特に注意"></textarea></label>
+      </div>
+    </div>
+
+    <div class="col result">
+      <div class="box">
+        <h2>この内容だと</h2>
+        <div class="pname" id="pname"></div>
+        <p class="pdesc" id="pdesc"></p>
+        <div class="tabs">
+          <span class="grp" id="shotTabs"><button type="button" data-shot="wide" aria-pressed="true">引き</button><button type="button" data-shot="close" aria-pressed="false">寄り</button><button type="button" data-shot="solo" aria-pressed="false">1人</button></span>
+          <span class="grp" id="sceneTabs"><button type="button" data-scene="normal" aria-pressed="true">通常</button><button type="button" data-scene="emph" aria-pressed="false">強調</button><button type="button" data-scene="profile" aria-pressed="false">プロフィール</button></span>
+        </div>
+        <div class="frame" id="frame"></div>
+        <div class="prog"><span id="progText"></span><span class="bar"><i id="progBar"></i></span></div>
+        <div class="omk" id="omk"></div>
+        <div class="acts">
+          <button class="btn primary" type="button" id="btnCopy">結果をコピー（AIに送る）</button>
+          <a class="btn" id="btnOpen" href="index.html" target="_blank" rel="noopener">見本帳で開く</a>
+          <button class="btn" type="button" id="btnUrl">このURLを共有</button>
+          <button class="btn" type="button" id="btnReset">最初から</button>
+        </div>
+        <textarea class="copybox" id="copyBox" readonly aria-label="ヒアリング結果"></textarea>
+        <p class="hint">コピーした文には答えと、見本帳と同じ設定（style.json）が入ります。そのままAIに貼れば、同じ見た目で編集に進めます。</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>Podcast Lookbook ヒアリングシート v1（2026-10）。プレビューの人物はAI生成の見本で、実在の人物ではありません。</footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="lookbook-core.js"></script>
+<script>
+(function(){
+  "use strict";
+  var LB = window.Lookbook, esc = LB.esc;
+  var $ = function(id){ return document.getElementById(id); };
+  var ANY = "any";
+  // 質問（id・文言・選択肢。dep は「字幕あり」のときだけ意味を持つ質問）
+  var QUESTIONS = [
+    {id:"mood", t:"番組の雰囲気", why:"全体の方向を決めます", opts:[["biz","ビジネス・落ち着いた"],["casual","カジュアル・親しみやすい"],["ent","エンタメ・にぎやか"]]},
+    {id:"cap", t:"字幕テロップ", why:"発言の字幕を入れるか", opts:[["all","全編に入れる"],["key","要所だけ"],["none","入れない"]]},
+    {id:"font", t:"字幕の書体", dep:true, font:{gothic:"var(--f-gothic)",mincho:"var(--f-mincho)",maru:"var(--f-maru)"}, opts:[["gothic","ゴシック"],["mincho","明朝"],["maru","丸ゴシック"]]},
+    {id:"size", t:"字幕の大きさ", dep:true, opts:[["s","控えめ"],["m","標準"],["l","大きめ"]]},
+    {id:"spk", t:"話す人で色分け", dep:true, opts:[["fill","する（文字の色）"],["stroke","する（縁の色）"],["no","しない"]]},
+    {id:"plate", t:"字幕の座布団（帯）", dep:true, opts:[["none","なし"],["band","半透明の黒帯"],["white","白座布団"]]},
+    {id:"emph", t:"強調テロップ", why:"要所のひと言を大きく", opts:[["big","大きい文字"],["marker","蛍光マーカー"],["none","なし"]]},
+    {id:"title", t:"話題タイトル（左上）", opts:[["band","半透明の帯"],["white","白座布団"],["dark","黒座布団"],["none","なし"]]},
+    {id:"logo", t:"ロゴ", opts:[["tr_plate","右上・白プレート"],["tr_clear","右上・透過"],["tl","左上"],["none","なし"]]},
+    {id:"name", t:"名前ラベル（名前・肩書）", opts:[["intro","登場時に出す"],["always","出し続ける"],["none","なし"]]},
+    {id:"prof", t:"冒頭のプロフィール場面", opts:[["white","あり・白カード"],["dark","あり・半透明黒"],["timeline","あり・年表"],["none","なし"]]},
+    {id:"digest", t:"冒頭ダイジェスト", why:"見どころを60〜90秒で冒頭に", opts:[["yes","あり"],["no","なし"]]},
+    {id:"cam", t:"カメラ割り", opts:[["auto","自動切替"],["wide","引き固定"],["split","2分割（要相談）"],["pip","ワイプ（要相談）"]]},
+    {id:"bgm", t:"BGM", opts:[["none","なし"],["light","控えめ"],["ask","相談して決める"]]}
+  ];
+  var FREE = ["client","program","people","date","ref","volume","due","memo"];
+  var a = {}, free = {}, view = { shot:"wide", scene:"normal" };
+
+  function optLabel(q, v){ if(v===ANY) return "おまかせ"; var o=q.opts.filter(function(x){return x[0]===v;})[0]; return o? o[1] : "（未回答）"; }
+  function capOff(){ return a.cap==="none"; }
+
+  // ---------- 答え → パターンと設定 ----------
+  function derive(){
+    var pid;
+    if(a.cap==="none") pid=1;
+    else if(a.cam==="split"||a.cam==="pip") pid=10;
+    else if(a.spk==="fill"||a.spk==="stroke") pid=4;
+    else if(a.plate==="band") pid=5;
+    else if(a.title==="white"||a.plate==="white") pid=6;
+    else if(a.emph==="marker"||(a.digest==="yes"&&a.emph!=="big")) pid=7;
+    else if(a.name==="always") pid=8;
+    else if(a.mood==="ent"||a.size==="l") pid=9;
+    else if(a.mood==="casual") pid=2;
+    else pid=3; // ビジネス・おまかせの既定
+    var s = LB.presetSpec(pid);
+    if(a.cap==="none") s.cap.on=false; else if(a.cap==="all"||a.cap==="key") s.cap.on=true;
+    if(!capOff()){
+      if(a.font && a.font!==ANY) s.cap.font=a.font;
+      if(a.size && a.size!==ANY) s.cap.size = a.size==="s"?0.85 : a.size==="l"?1.25 : 1.0;
+      if(a.spk==="fill"){ s.cap.spk=true; s.cap.spkMode="fill"; s.cap.c1="#FFFFFF"; s.cap.c2="#FFF0A8"; }
+      else if(a.spk==="stroke"){ s.cap.spk=true; s.cap.spkMode="stroke"; s.cap.c1="#1E7BE0"; s.cap.c2="#F2801E"; }
+      else if(a.spk==="no") s.cap.spk=false;
+      if(a.plate && a.plate!==ANY){ s.cap.plate=a.plate; if(a.plate!=="none"){ s.cap.stroke="none"; s.cap.shadow="none"; } }
+    }
+    if(a.emph==="none") s.emph.on=false; else if(a.emph&&a.emph!==ANY){ s.emph.on=true; s.emph.style=a.emph; }
+    if(a.cap==="key" && (!a.emph||a.emph===ANY)) s.emph.on=true;
+    if(a.title==="none") s.title.on=false; else if(a.title&&a.title!==ANY){ s.title.on=true; s.title.style=a.title; }
+    if(a.logo==="none") s.logo.on=false; else if(a.logo==="tr_plate"){ s.logo.on=true; s.logo.pos="tr"; s.logo.style="plate"; } else if(a.logo==="tr_clear"){ s.logo.on=true; s.logo.pos="tr"; s.logo.style="transparent"; } else if(a.logo==="tl"){ s.logo.on=true; s.logo.pos="tl"; s.logo.style="plate"; }
+    if(a.name==="none") s.name.on=false; else if(a.name&&a.name!==ANY) s.name.on=true;
+    if(a.prof==="none") s.prof.on=false; else if(a.prof&&a.prof!==ANY){ s.prof.on=true; s.prof.style=a.prof; }
+    if(a.digest==="yes") s.digest=true; else if(a.digest==="no") s.digest=false;
+    if(a.cam && a.cam!==ANY) s.cam=a.cam;
+    if(a.bgm && a.bgm!==ANY) s.bgm=a.bgm;
+    return { pid:pid, spec:s };
+  }
+  function activeQuestions(){ return QUESTIONS.filter(function(q){ return !(q.dep && capOff()); }); }
+  function answeredCount(){ return activeQuestions().filter(function(q){ return a[q.id]; }).length; }
+
+  // ---------- 描画 ----------
+  function renderQuestions(){
+    var root=$("qlist"); root.innerHTML="";
+    QUESTIONS.forEach(function(q,i){
+      var off = q.dep && capOff();
+      var d=document.createElement("div"); d.className="q"+(a[q.id]?" done":"")+(off?" off":""); d.id="q-"+q.id;
+      var head='<div class="qt"><span class="no">Q'+(i+1)+'</span><span>'+esc(q.t)+'</span>'+(off?'<span class="why">字幕なしのため不要</span>':(q.why?'<span class="why">'+esc(q.why)+'</span>':''))+'</div>';
+      var opts=document.createElement("div"); opts.className="opts";
+      q.opts.concat([[ANY,"おまかせ"]]).forEach(function(o){
+        var b=document.createElement("button"); b.type="button"; b.className="opt"+(o[0]===ANY?" any":""); b.textContent=o[1]; b.setAttribute("aria-pressed", String(a[q.id]===o[0]));
+        if(q.font && q.font[o[0]]) b.style.fontFamily=q.font[o[0]];
+        if(off) b.disabled=true;
+        b.addEventListener("click", function(){ a[q.id] = (a[q.id]===o[0]) ? undefined : o[0]; renderAll(); });
+        opts.appendChild(b);
+      });
+      d.innerHTML=head; d.appendChild(opts); root.appendChild(d);
+    });
+  }
+  function renderResult(){
+    var r=derive(), p=LB.patternById(r.pid);
+    $("pname").innerHTML='<span class="num">'+p.id+'</span>'+esc(p.name)+(p.ask?' <span class="ask">要相談</span>':'');
+    $("pdesc").textContent=p.desc;
+    LB.paintFrame($("frame"), r.spec, view.shot, view.scene, "a");
+    Array.prototype.forEach.call($("shotTabs").querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", String(b.dataset.shot===view.shot)); });
+    Array.prototype.forEach.call($("sceneTabs").querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", String(b.dataset.scene===view.scene)); });
+    $("sceneTabs").querySelector('[data-scene="profile"]').style.opacity = r.spec.prof.on ? "1" : ".55";
+    $("sceneTabs").querySelector('[data-scene="emph"]').style.opacity = r.spec.emph.on ? "1" : ".55";
+    var n=answeredCount(), total=activeQuestions().length;
+    $("progText").textContent = n+" / "+total+" 問";
+    $("progBar").style.width = Math.round(100*n/total)+"%";
+    var omk = activeQuestions().filter(function(q){ return a[q.id]===ANY; }).map(function(q){ return q.t; });
+    $("omk").textContent = omk.length ? "おまかせ: "+omk.join("・") : "";
+    $("btnOpen").href = "index.html"+LB.encodeHash({pattern:p.id, shot:view.shot, scene:view.scene, studio:"a", spec:r.spec});
+  }
+  function renderAll(){ renderQuestions(); renderResult(); writeUrl(); }
+
+  // ---------- 結果の文 ----------
+  function resultText(){
+    var r=derive(), p=LB.patternById(r.pid);
+    var pre=[];
+    var basics=[["クライアント",free.client],["番組",free.program],["ホスト・ゲスト",free.people],["打ち合わせ日",free.date]].filter(function(x){return x[1];});
+    if(basics.length) pre.push(basics.map(function(x){ return x[0]+": "+x[1]; }).join("／"));
+    pre.push("");
+    pre.push("■ ヒアリングの答え");
+    QUESTIONS.forEach(function(q,i){
+      var off = q.dep && capOff();
+      pre.push("Q"+(i+1)+" "+q.t+": "+(off ? "（字幕なしのため不要）" : (a[q.id]===ANY ? "おまかせ（編集側で決める）" : a[q.id] ? optLabel(q,a[q.id]) : "未回答")));
+    });
+    var fr=[["参考にしたい番組",free.ref],["尺・本数・頻度",free.volume],["納期・公開予定",free.due],["その他の要望・NG",free.memo]].filter(function(x){return x[1];});
+    if(fr.length){ pre.push(""); pre.push("■ 自由記述"); fr.forEach(function(x){ pre.push(x[0]+": "+x[1]); }); }
+    pre.push("");
+    pre.push("■ おすすめの型（答えから自動で決めたもの。おまかせの項目は型の初期値）");
+    var post=[];
+    if(a.name==="intro") post.push("名前ラベルの出し方: 登場時だけ");
+    if(a.name==="always") post.push("名前ラベルの出し方: 出し続ける");
+    if(a.cap==="key") post.push("字幕は要所だけ（全編ではない）");
+    var hearing = { answers: QUESTIONS.reduce(function(o,q){ o[q.id]=a[q.id]||null; return o; },{}), free: free };
+    return LB.requestText(r.spec, p, { header:"【ポッドキャスト動画 ヒアリング結果（Podcast Lookbook）】", pre:pre, post:post, url: location.origin+location.pathname.replace(/hearing\.html$/,"index.html")+LB.encodeHash({pattern:p.id, shot:"wide", scene:"normal", studio:"a", spec:r.spec}), hearing:hearing });
+  }
+  function toast(msg){ var t=$("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toast._tm); toast._tm=setTimeout(function(){ t.classList.remove("show"); }, 2200); }
+  $("btnCopy").addEventListener("click", function(){ writeUrl(); LB.copyText(resultText(), $("copyBox"), toast, "ヒアリング結果をコピーしました。AIのチャットに貼ってください"); });
+  $("btnUrl").addEventListener("click", function(){ writeUrl(); LB.copyText(location.href, $("copyBox"), toast, "URLをコピーしました"); });
+  $("btnReset").addEventListener("click", function(){ a={}; free={}; FREE.forEach(function(k){ $("f_"+k).value=""; }); $("copyBox").classList.remove("show"); renderAll(); });
+  $("shotTabs").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b) return; view.shot=b.dataset.shot; renderResult(); });
+  $("sceneTabs").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b) return; view.scene=b.dataset.scene; renderResult(); });
+  FREE.forEach(function(k){ var el=$("f_"+k); el.addEventListener("input", function(){ free[k]=el.value; clearTimeout(el._t); el._t=setTimeout(writeUrl,400); }); });
+
+  // ---------- URL状態（答えと自由記述を # に） ----------
+  function writeUrl(){
+    var q=new URLSearchParams();
+    QUESTIONS.forEach(function(x){ if(a[x.id]) q.set(x.id, a[x.id]); });
+    FREE.forEach(function(k){ if(free[k]) q.set("f_"+k, free[k]); });
+    try{ history.replaceState(null,"","#"+q.toString()); }catch(_){}
+  }
+  function readUrl(){
+    var h=location.hash.replace(/^#/,""); if(!h) return;
+    var q=new URLSearchParams(h);
+    QUESTIONS.forEach(function(x){ var v=q.get(x.id); if(v && (v===ANY || x.opts.some(function(o){return o[0]===v;}))) a[x.id]=v; });
+    FREE.forEach(function(k){ var v=q.get("f_"+k); if(v){ free[k]=v; $("f_"+k).value=v; } });
+  }
+  readUrl();
+  if(!free.date){ var d=new Date(), z=function(n){return (n<10?"0":"")+n;}; $("f_date").value=d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate()); free.date=$("f_date").value; }
+  renderAll();
+})();
+</script>
+</body>
+</html>

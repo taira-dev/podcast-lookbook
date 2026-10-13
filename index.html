@@ -9,30 +9,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Noto+Sans+JP:wght@500;700;900&family=Zen+Maru+Gothic:wght@700;900&display=swap">
+<link rel="stylesheet" href="lookbook.css">
 <style>
-  /* 構成: 上=パターンのカード（小さなプレビュー付き）／下=大きなプレビュー＋調整／参考動画。トーン: 黒×オフ白×オレンジ・明朝・点線 */
-  :root{
-    --bg:#F2F0EA; --paper:#FBFAF7; --ink:#1B1B1B; --muted:#6B675F; --line:#D8D3C8; --soft:#E9E5DB;
-    --accent:#E0511E; --accent-soft:#FBE4DA; --ok:#2E7D4F; --warn:#9A6B00; --warn-soft:#FFF1CC;
-    --display:"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
-    --body:"Noto Sans JP","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
-    --f-mincho:"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
-    --f-gothic:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;
-    --f-maru:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",sans-serif;
-    color-scheme: light;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0}
-  body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.7;padding-block:0 48px;padding-inline:16px}
-  a{color:var(--accent)}
-  button,select,input{font:inherit;color:inherit}
-  .wrap{max-width:1360px;margin:0 auto}
-  header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 24px;padding:22px 0 14px;border-bottom:1px dotted var(--line)}
-  .brand{font-family:var(--display);font-weight:900;letter-spacing:.16em;font-size:18px;line-height:1.2}
-  .brand small{display:block;font-family:var(--body);font-weight:500;letter-spacing:.06em;font-size:11px;color:var(--muted);margin-top:4px}
-  .lead{color:var(--muted);font-size:13px;margin:0;flex:1 1 320px}
-  .label{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--muted);margin:0 0 8px}
-  /* パターンのカード */
+  /* 構成: 上=パターンのカード（小さなプレビュー付き）／下=大きなプレビュー＋調整／参考動画 */
   .patterns{margin-top:18px}
   .plist{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 10px;scroll-snap-type:x proximity}
   .pt{flex:0 0 212px;scroll-snap-align:start;text-align:left;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:6px 6px 8px;cursor:pointer;line-height:1.4;display:flex;flex-direction:column;gap:6px}
@@ -42,74 +21,11 @@
   .pt .num{font-family:var(--display);font-weight:900;font-size:16px;color:var(--accent);min-width:1.3em;font-variant-numeric:tabular-nums;line-height:1.3}
   .pt .nm{font-weight:700;font-size:13px;display:block}
   .pt .ds{display:block;font-size:11px;color:var(--muted)}
-  .ask{display:inline-block;font-size:10px;color:var(--warn);background:var(--warn-soft);padding:0 5px;border-radius:3px;margin-left:4px;vertical-align:1px}
-  /* プレビュー枠（大・小 共通。文字や余白は枠の高さ比 cqh / 幅比 cqw） */
-  .frame{position:relative;aspect-ratio:16/9;max-width:100%;overflow:hidden;border-radius:6px;background:#111;container-type:size;color:#fff}
-  .frame.mini{border-radius:6px;pointer-events:none}
-  .frame .shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-  .frame .ph{position:absolute;inset:0;display:none;background:radial-gradient(60% 55% at 32% 62%,#6f6557 0,rgba(0,0,0,0) 62%),radial-gradient(60% 55% at 68% 60%,#55616a 0,rgba(0,0,0,0) 62%),linear-gradient(180deg,#3a3f4b,#141720)}
-  .frame .split{position:absolute;inset:0;display:none;grid-template-columns:1fr 1fr;gap:0.4cqw;background:#000}
-  .frame .split img{width:100%;height:100%;object-fit:cover;display:block}
-  .frame.is-split .split{display:grid}
-  .frame.is-split .shot,.frame.is-split .ph{display:none}
-  .frame .pip{position:absolute;display:none;width:27cqw;aspect-ratio:16/9;right:3cqw;top:13cqh;border:0.35cqw solid #fff;border-radius:0.6cqw;overflow:hidden;background:#000;box-shadow:0 0.6cqh 1.6cqh rgba(0,0,0,.45)}
-  .frame .pip img{width:100%;height:100%;object-fit:cover;display:block}
-  .frame.is-pip .pip{display:block}
-  .ov{position:absolute;pointer-events:none}
-  .ov-cap{left:0;right:0;text-align:center;padding-inline:4cqw;display:flex;flex-direction:column;align-items:center;gap:0.6cqh}
-  .ov-cap .ln{display:inline-block;white-space:nowrap;line-height:1.25;font-weight:900}
-  .ov-cap.plate-band .ln{background:rgba(0,0,0,.62);padding:0.4cqh 1.2cqw}
-  .ov-cap.plate-white .ln{background:#fff;color:#1b1b1b !important;padding:0.4cqh 1.2cqw}
-  .ov-cap .mk{background:#00F842;color:#111;padding:0 .3em;-webkit-text-stroke:0;text-shadow:none}
-  .ov-title{top:5.5cqh;max-width:60cqw;font-weight:700;line-height:1.3;font-family:var(--f-gothic);font-size:3.6cqh}
-  .ov-title.band{background:rgba(40,40,40,.62);color:#fff;padding:1.2cqh 2cqw}
-  .ov-title.white{background:#fff;color:#141414;padding:1.1cqh 2cqw;font-weight:900;transform:skewX(-8deg);box-shadow:0.4cqw 0.5cqw 0 rgba(0,0,0,.65)}
-  .ov-title.white span{display:inline-block;transform:skewX(8deg)}
-  .ov-title.dark{background:#141414;color:#fff;padding:1.1cqh 2cqw;font-weight:900}
-  .ov-title.tl{left:4.5cqw} .ov-title.tr{right:4.5cqw;text-align:right}
-  .ov-logo{font-family:var(--f-gothic);font-weight:900;letter-spacing:.14em;line-height:1}
-  .ov-logo.plate{background:#fff;color:#1b1b1b;border-radius:0.5cqw;padding:0.9cqh 1.6cqw}
-  .ov-logo.transparent{color:#fff;text-shadow:0 0.3cqh 0.8cqh rgba(0,0,0,.6)}
-  .ov-logo.tr{right:3cqw;top:4.5cqh} .ov-logo.tl{left:3cqw;top:4.5cqh} .ov-logo.br{right:3cqw;bottom:4.5cqh} .ov-logo.bl{left:3cqw;bottom:4.5cqh}
-  .ov-name{font-family:var(--f-gothic);font-weight:700;font-size:2.7cqh;line-height:1.3;padding:0.7cqh 1.6cqw}
-  .ov-name.white{background:rgba(255,255,255,.94);color:#1b1b1b} .ov-name.dark{background:rgba(20,20,20,.85);color:#fff}
-  .ov-name.bl{left:4.5cqw} .ov-name.br{right:4.5cqw;text-align:right}
-  .ov-name small{display:block;font-weight:500;font-size:.8em;opacity:.85}
-  /* 冒頭のプロフィール: 寄り・1人は顔の横に1枚、引きは下段に2人分 */
-  .ov-prof{font-family:var(--f-gothic);line-height:1.5}
-  .ov-prof.single{width:34cqw}
-  .ov-prof.single.left{left:5cqw} .ov-prof.single.right{right:5cqw} .ov-prof.single.center{left:33cqw}
-  .ov-prof.pair{left:4.5cqw;right:4.5cqw;display:flex;justify-content:space-between;align-items:flex-end;gap:2cqw}
-  .ov-prof.pair .pcard{width:31cqw}
-  .ov-prof.y-top{top:15cqh} .ov-prof.y-middle{top:27cqh} .ov-prof.y-bottom{bottom:9cqh}
-  .pcard{padding:1.8cqh 2.2cqw}
-  .pcard.white,.pcard.timeline{background:rgba(255,255,255,.95);color:#1b1b1b}
-  .pcard.dark{background:rgba(10,10,10,.74);color:#fff}
-  .pcard .pn{font-weight:900;font-size:3.4cqh;border-bottom:1px solid currentColor;padding-bottom:0.9cqh;margin-bottom:1.1cqh;white-space:nowrap}
-  .pcard .pn small{font-weight:500;font-size:.55em;margin-left:.6em}
-  .pcard .pb{font-size:2.1cqh;white-space:pre-line}
-  .ov-prof.pair .pcard .pn{font-size:3.1cqh} .ov-prof.pair .pcard .pb{font-size:1.95cqh}
-  /* 下段 */
   .grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px;margin-top:10px;align-items:start}
   .col{min-width:0}
   .toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:0 0 8px}
-  .grp{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--paper)}
-  .grp button{border:0;background:transparent;padding:4px 11px;font-size:12px;cursor:pointer;color:var(--muted)}
-  .grp button[aria-pressed="true"]{background:var(--ink);color:#fff}
-  .grp button[disabled]{opacity:.45;cursor:default}
   .toolbar .lb{font-size:11px;color:var(--muted);letter-spacing:.08em;margin-left:4px}
   .under{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
-  .btn{border:1px solid var(--ink);background:var(--paper);border-radius:8px;padding:7px 13px;font-size:13px;cursor:pointer;line-height:1.3}
-  .btn:hover{background:#fff}
-  .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
-  .btn.primary:hover{background:#000}
-  .btn:focus-visible,.pt:focus-visible,.grp button:focus-visible,.seg button:focus-visible,.refthumb:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .badge{font-size:11px;color:var(--muted);border:1px dotted var(--line);border-radius:999px;padding:2px 9px}
-  .badge.on{color:var(--ok);border-color:var(--ok)}
-  .hint{font-size:12px;color:var(--muted);margin:6px 0 0}
-  .copybox{width:100%;margin-top:8px;font-family:ui-monospace,Menlo,monospace;font-size:12px;border:1px solid var(--line);border-radius:6px;background:var(--paper);padding:8px 10px;min-height:120px;resize:vertical;display:none}
-  .copybox.show{display:block}
-  /* 参考動画 */
   .ref{margin-top:22px;padding-top:16px;border-top:1px dotted var(--line);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
   .ref h3{font-family:var(--display);font-size:16px;margin:0 0 4px;font-weight:700}
   .ref .meta{font-size:13px;color:var(--muted)}
@@ -122,7 +38,6 @@
   .refthumb .tm{position:absolute;right:8px;bottom:8px;background:rgba(0,0,0,.72);color:#fff;font-size:11px;padding:2px 7px;border-radius:4px}
   .refthumb.empty{cursor:default;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px}
   .refthumb iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-  /* 調整パネル */
   .panel{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:4px 14px 10px}
   details{border-top:1px dotted var(--line);padding:6px 0}
   details:first-of-type{border-top:0}
@@ -134,28 +49,13 @@
   .row select,.row input[type=text]{max-width:160px;min-width:0;border:1px solid var(--line);border-radius:6px;padding:3px 6px;background:#fff;font-size:12px}
   .row input[type=range]{width:120px;accent-color:var(--accent)}
   .row input[type=color]{width:34px;height:24px;border:1px solid var(--line);border-radius:6px;padding:1px;background:#fff}
-  .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
-  .seg button{border:0;background:transparent;padding:3px 9px;font-size:13px;cursor:pointer;color:var(--muted);font-weight:900}
-  .seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
   .sw{position:relative;width:36px;height:20px;border-radius:999px;background:var(--line);border:0;cursor:pointer;flex:none;padding:0}
   .sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}
   .sw[aria-checked="true"]{background:var(--ok)} .sw[aria-checked="true"]::after{left:18px}
   .sw:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .colors{display:flex;gap:6px;align-items:center}
   .note{font-size:11px;color:var(--muted);padding:2px 0 4px}
-  .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw}
-  .toast.show{opacity:1}
-  .allrefs{margin-top:36px;padding-top:16px;border-top:1px dotted var(--line)}
-  .allrefs h3{font-family:var(--display);font-size:16px;margin:0 0 4px;font-weight:700}
-  .tbl{overflow-x:auto}
-  .allrefs table{border-collapse:collapse;width:100%;font-size:12.5px;margin-top:8px}
-  .allrefs th,.allrefs td{text-align:left;padding:6px 8px;border-bottom:1px dotted var(--line);vertical-align:top}
-  .allrefs th{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.06em}
-  .allrefs td .ch{display:block;font-size:11px;color:var(--muted)}
-  .allrefs tr.cur td{background:#fff}
-  footer{margin-top:36px;padding-top:12px;border-top:1px dotted var(--line);font-size:11px;color:var(--muted)}
   @media (max-width:860px){ .grid{grid-template-columns:1fr} .ref{grid-template-columns:1fr} .pt{flex-basis:190px} }
-  @media (prefers-reduced-motion:reduce){ *{transition:none!important} }
 </style>
 </head>
 <body>
@@ -163,6 +63,7 @@
   <header>
     <div class="brand">Podcast Lookbook<small>ポッドキャスト動画の編集スタイル</small></div>
     <p class="lead">パターンを選び、字幕やロゴを調整して、決まったら「依頼文をコピー」。この画面の状態はURLに入るので、URLを送れば同じ画面が開きます。</p>
+    <nav class="nav"><a href="index.html" aria-current="page">見本帳</a><a href="hearing.html">ヒアリングシート</a></nav>
   </header>
 
   <section class="patterns">
@@ -207,229 +108,21 @@
     </div>
   </div>
 
-  <section class="allrefs">
-    <h3>参考動画の一覧（10本）</h3>
-    <p class="hint">1対1の対話番組から、型がばらけるように選んでいます。差し替えたい番組があれば教えてください。</p>
-    <div class="tbl"><table id="allrefs"></table></div>
-  </section>
-
   <footer>Podcast Lookbook v1（2026-10）。参考動画の著作権は各権利者に帰属します。プレビューの人物はAI生成の見本で、実在の人物ではありません。</footer>
 </div>
 <div class="toast" id="toast"></div>
 
+<script src="lookbook-core.js"></script>
 <script>
 (function(){
   "use strict";
-  // ---------- 見本の文言 ----------
-  var SHOT_CAP = {
-    wide:  ["最初の1年は、とにかく人に会い続けました", "それが今の事業につながっているんですね"],
-    close: ["正直、最初の半年は売上ゼロでした"],
-    solo:  ["今日は、私が独立した理由をお話しします"]
-  };
-  var SHOT_EMPH = { wide:"人に会い続けた1年", close:"売上ゼロの半年", solo:"独立した理由" };
-  var SHOT_SPK  = { wide:[0,1], close:[1], solo:[0] };   // 行ごとの話者（0=ホスト, 1=ゲスト）。引き=ホストが先に話し、ゲストが返す
-  var PROFILES = {
-    host:  { name:"山田 花子", title:"ホスト｜株式会社サンプル 代表", bio:"広告代理店を経て独立。\nマーケティング支援と番組の企画を担当。", timeline:"2010　広告代理店に入社\n2017　株式会社サンプル 創業\n2024　本番組を開始" },
-    guest: { name:"佐藤 太郎", title:"ゲスト｜サンプル工業 取締役", bio:"大手メーカーを経て家業へ。\n製造業のDXと新規事業を担当。", timeline:"2012　大手メーカーに入社\n2018　家業のサンプル工業へ\n2023　取締役に就任" }
-  };
-  var FONTS = { mincho:"明朝", gothic:"ゴシック", maru:"丸ゴシック" };
-  var FONT_CSS = { mincho:"var(--f-mincho)", gothic:"var(--f-gothic)", maru:"var(--f-maru)" };
-
-  // ---------- スタジオ（背景の見本。pos は object-position、prof はプロフィールカードを置く側） ----------
-  // 引きの2人と寄りは同じ人物（AI生成）。split は引きと同じ左右の並び、pip はゲストの寄りにホストの小窓
-  var STUDIOS = {
-    a: { label:"スタジオA", shots:{
-          wide:{src:"img/shot_wide.jpg", pos:"50% 50%", prof:"center"},
-          close:{src:"img/shot_close.jpg", pos:"40% 50%", prof:"right"},
-          solo:{src:"img/shot_solo.jpg", pos:"62% 50%", prof:"left"} },
-         split:{ left:{shot:"close", pos:"42% 50%"}, right:{shot:"solo", pos:"60% 50%"} },
-         pip:{ main:{shot:"close", pos:"40% 50%"}, small:{shot:"solo", pos:"62% 50%"} } }
-  };
-  var STUDIO_ORDER = ["a"]; // スタジオが1つのときは切替欄を出さない（renderTabs）
-
-  // ---------- 既定（どのパターンにも無い項目はこれ） ----------
-  var BASE = {
-    cap:{on:true, font:"gothic", size:1.0, bottom:7, color:"#FFFFFF", spk:false, spkMode:"fill", c1:"#FFFFFF", c2:"#FFF0A8", stroke:"thick", shadow:"soft", plate:"none", lines:2},
-    emph:{on:false, style:"big"},
-    title:{on:false, style:"band", pos:"tl", text:"第1回｜起業のきっかけ"},
-    logo:{on:true, pos:"tr", style:"plate", size:1.0},
-    name:{on:false, pos:"bl", style:"white"},
-    prof:{on:false, style:"white", pos:"auto", y:"auto"},
-    digest:false, cam:"auto", bgm:"none"
-  };
-
-  // ---------- 10パターン（ref は参考動画。2026-10-13 時点で公開・埋め込み可を確認。1対1の対話番組のみ） ----------
-  var PATTERNS = [
-    {id:1, name:"ミニマル", desc:"字幕なし。ロゴだけで映像を見せる", ask:false,
-      ref:{id:"D8LFvXF2Q-c", start:300, program:"日経ビジネスLIVE 河合薫×清水哲太郎「経営と舞台の交差点」", channel:"日経ビジネス", seen:"1対1の固定2ショット。字幕・タイトル・名前ラベルは無く、右上に番組ロゴだけを常時表示。ライブ配信のアーカイブで720p。"},
-      set:{cap:{on:false}, logo:{on:true,pos:"tr",style:"transparent"}}},
-    {id:2, name:"白ゴシック", desc:"太いゴシックの白字幕。黒縁、座布団なし", ask:false,
-      ref:{id:"NMpQ7ysG-xk", start:600, program:"渡部のサシ飲み 近藤太香巳「三木谷・熊谷」尊敬する経営者2人", channel:"渡部のサシ飲み", seen:"1対1（ホスト＋ゲスト）。ゴシック太字の白字幕に細い黒縁と薄い影、座布団なし、下部中央1行。左上に白文字＋下線の話題、右上に番組ロゴ。冒頭のダイジェストは赤と黄の大型明朝。"},
-      set:{cap:{on:true,font:"gothic",stroke:"thick",shadow:"soft",plate:"none"}, logo:{on:true,pos:"tr",style:"plate"}}},
-    {id:3, name:"白明朝", desc:"極太明朝に柔らかい影。左上に話題タイトル", ask:false,
-      ref:{id:"hCYQprtIf6A", start:600, program:"崖っぷち#4【赤字1,000万超】亡き弟から会社を継いだ兄が明かす経営危機", channel:"青木康時〜100億達成までの全て〜", seen:"明朝体の白字幕に柔らかい黒い影、縁取りなし、座布団なし、下部中央1〜2行。左上に黒の半透明帯＋白明朝2行の話題タイトル、右上に章見出し。"},
-      set:{cap:{on:true,font:"mincho",stroke:"thin",shadow:"soft",plate:"none"}, emph:{on:true,style:"big"}, title:{on:true,style:"band",pos:"tl"}, logo:{on:true,pos:"tr",style:"plate"}}},
-    {id:4, name:"話者色分け", desc:"話す人ごとに字幕の色（文字か縁）を変える", ask:false,
-      ref:{id:"0eWLOVrpbCs", start:900, program:"三崎優太×ひろゆき「ひろゆきに絶縁の真相を聞いたら…」", channel:"三崎優太 元青汁王子", seen:"車内の1対1。ゴシック太字の白字幕で、話す人によって縁の色が青とオレンジに切り替わる（文字色は両者とも白）。下部中央1行、座布団なし。左上に黒帯＋白文字の話題（キーワードは赤）。色と話者の対応は映像から推定。"},
-      set:{cap:{on:true,font:"gothic",stroke:"thick",shadow:"soft",plate:"none",spk:true,spkMode:"stroke",c1:"#1E7BE0",c2:"#F2801E"}, title:{on:true,style:"band",pos:"tl"}, logo:{on:true,pos:"tr",style:"plate"}}},
-    {id:5, name:"半透明黒帯", desc:"字幕の下に半透明の黒い帯。映画字幕のように", ask:false,
-      ref:{id:"kz9VfPZWXGk", start:120, program:"ReHacQ【東出昌大vs高橋弘樹】ウソと真実…魂の告白", channel:"ReHacQ−リハック−【公式】", seen:"MCなしの1対1。白ゴシック太字の字幕の下に、文字幅に合わせた黒の半透明ボックス（2行のときは画面幅の8割まで広がる）。下部左寄り。右上にマゼンタの角丸座布団で話題、左上に番組ロゴ。途中に左右2分割の場面もある。"},
-      set:{cap:{on:true,font:"gothic",stroke:"none",shadow:"none",plate:"band",size:0.9}, logo:{on:true,pos:"tr",style:"transparent"}}},
-    {id:6, name:"白座布団タイトル", desc:"左上に白い座布団と黒の太字。字幕は白ゴシック", ask:false,
-      ref:{id:"d8lu3GuuZK8", start:600, program:"新R25「病むくらいならコムドットを辞めてもいい。」やまと", channel:"新R25チャンネル", seen:"左上に白い座布団＋左端の赤い縦バー＋黒ゴシック太字の話題タイトルを常時表示（キーフレーズに黄色マーカー）。字幕は白ゴシック太字に黒縁、キーワードだけ黄色。右上に文字ロゴ。"},
-      set:{cap:{on:true,font:"gothic",stroke:"thick",shadow:"soft",plate:"none"}, title:{on:true,style:"white",pos:"tl"}, logo:{on:false}}},
-    {id:7, name:"キーワード強調＋冒頭ダイジェスト", desc:"キーワードを強調。冒頭にハイライト", ask:false,
-      ref:{id:"t3zAPootMoU", start:30, program:"スタートアップ オフレコ対談 EP.192 YC最新バッチ総ざらい 福山太郎", channel:"スタートアップ オフレコ対談", seen:"1対1（ホスト＋ゲスト）。冒頭に「ダイジェスト」ラベル付きのハイライトがあり、黒ボックス＋白ゴシックの見出しの中でキーワードだけ水色＋下線で強調。本編は字幕なしで、映像の下の帯に2人分の名前と肩書を常時表示。720p。蛍光色の帯ではなく下線と色替えで強調する例。"},
-      set:{cap:{on:true,font:"gothic",stroke:"thick",shadow:"soft",plate:"none"}, emph:{on:true,style:"marker"}, logo:{on:true,pos:"tl",style:"transparent"}, digest:true}},
-    {id:8, name:"ネームプレート", desc:"名前と肩書のプレートを出す。登場時、または出し続ける", ask:false,
-      ref:{id:"5N6_z3gaXks", start:90, program:"TBS CROSS DIG 1on1 Podcastプロデューサー・野村高文", channel:"TBS CROSS DIG with Bloomberg", seen:"ゲストの登場時に、黒＋金の大きなロワーサード（名前・肩書・経歴）を左下に表示。右上に黒帯の話題タイトル（キーワードは金色）、左上にチャンネルロゴ。発言字幕はなし。プレートは冒頭だけで、常時表示ではない。"},
-      set:{cap:{on:true,font:"gothic",stroke:"thin",shadow:"soft",plate:"none",size:0.9}, name:{on:true,pos:"bl",style:"white"}, logo:{on:true,pos:"tr",style:"plate"}}},
-    {id:9, name:"大型2色テロップ", desc:"太い色縁の大きい字幕。要所は色を変える", ask:false,
-      ref:{id:"LJG3mbjhwfo", start:400, program:"【堀江の予言】2026年は”この職業”が終わります（年末トーク 桑田×堀江）", channel:"桑田龍征", seen:"大きめのゴシック極太・白文字に太い青縁と黒い影、下部中央1〜2行。1000秒付近は黄縁、1500秒付近は画面幅いっぱいの超大型と、縁の色と大きさで強弱を付ける。左上に多色の番組タイトル、右上に次の話題。"},
-      set:{cap:{on:true,font:"gothic",stroke:"thick",shadow:"hard",plate:"none",size:1.3,spk:true,c1:"#FFFFFF",c2:"#FFE033",lines:2}, emph:{on:true,style:"big"}, title:{on:true,style:"white",pos:"tl"}, logo:{on:true,pos:"tr",style:"plate"}}},
-    {id:10, name:"2分割／ワイプ", desc:"2人を同時に見せる画面レイアウト", ask:true,
-      ref:{id:"IjqGWzLvkUY", start:90, program:"TBS CROSS DIG 1on1 Tech YouTube創業者スティーブ・チェン", channel:"TBS CROSS DIG with Bloomberg", seen:"スタジオのホストとリモートのゲストの1対1。左右2分割で2人を同時に見せる場面と、ゲストの1ショットを行き来する。字幕はゲストの英語を訳した白ゴシックを黒の半透明ボックス（2行・幅広）で下部左寄りに。右上に黒帯＋白文字の話題（キーワードは金色）、左上にロゴ。ワイプ（小窓）の実例は未収集。"},
-      set:{cap:{on:true,font:"gothic",stroke:"thick",shadow:"soft",plate:"none"}, logo:{on:true,pos:"tr",style:"plate"}, cam:"split"}}
-  ];
-
-  // ---------- 状態 ----------
+  var LB = window.Lookbook, PATTERNS = LB.PATTERNS, STUDIOS = LB.STUDIOS, esc = LB.esc, fmt = LB.fmt, getPath = LB.getPath, setPath = LB.setPath;
   var state = { pattern:3, shot:"wide", scene:"normal", studio:"a", spec:null };
   var customImg = {}; // shot -> dataURL（この画面の中だけ。保存も送信もしない）
   var $ = function(id){ return document.getElementById(id); };
-  function clone(o){ return JSON.parse(JSON.stringify(o)); }
-  function merge(base, over){
-    var out = clone(base);
-    Object.keys(over||{}).forEach(function(k){
-      if(over[k] && typeof over[k]==="object" && !Array.isArray(over[k])){ out[k] = Object.assign({}, out[k]||{}, over[k]); }
-      else out[k] = over[k];
-    });
-    return out;
-  }
-  function presetSpec(pid){ var p = PATTERNS.filter(function(x){return x.id===pid;})[0] || PATTERNS[0]; return merge(BASE, p.set); }
-  function currentPattern(){ return PATTERNS.filter(function(x){return x.id===state.pattern;})[0]; }
-  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
-
-  // ---------- URL ----------
-  var KEYS = [
-    ["p", function(){return state.pattern;}, function(v){ state.pattern = parseInt(v,10)||3; }],
-    ["sh", function(){return state.shot;}, function(v){ if(SHOT_CAP[v]) state.shot=v; }],
-    ["sc", function(){return state.scene;}, function(v){ if(["normal","emph","profile"].indexOf(v)>=0) state.scene=v; }],
-    ["st", function(){return state.studio;}, function(v){ if(STUDIOS[v]) state.studio=v; }]
-  ];
-  var FLAT = [
-    ["co","cap.on","b"],["cf","cap.font","s"],["cs","cap.size","n"],["cb","cap.bottom","n"],["cc","cap.color","s"],["ck","cap.spk","b"],["ckm","cap.spkMode","s"],["c1","cap.c1","s"],["c2","cap.c2","s"],["cst","cap.stroke","s"],["csh","cap.shadow","s"],["cp","cap.plate","s"],["cl","cap.lines","n"],
-    ["eo","emph.on","b"],["es","emph.style","s"],
-    ["to","title.on","b"],["ts","title.style","s"],["tp","title.pos","s"],["tt","title.text","s"],
-    ["lo","logo.on","b"],["lp","logo.pos","s"],["ls","logo.style","s"],["lz","logo.size","n"],
-    ["no","name.on","b"],["np","name.pos","s"],["ns","name.style","s"],
-    ["po","prof.on","b"],["ps","prof.style","s"],["pp","prof.pos","s"],["py","prof.y","s"],
-    ["dg","digest","b"],["cam","cam","s"],["bgm","bgm","s"]
-  ];
-  function getPath(o,p){ return p.split(".").reduce(function(a,k){ return a==null?a:a[k]; }, o); }
-  function setPath(o,p,v){ var ks=p.split("."), last=ks.pop(), t=ks.reduce(function(a,k){ if(!a[k]) a[k]={}; return a[k]; }, o); t[last]=v; }
-  function writeUrl(){
-    var q = new URLSearchParams();
-    KEYS.forEach(function(k){ q.set(k[0], String(k[1]())); });
-    var base = presetSpec(state.pattern);
-    FLAT.forEach(function(f){ var v=getPath(state.spec,f[1]), b=getPath(base,f[1]); if(v!==b){ q.set(f[0], f[2]==="b" ? (v?"1":"0") : String(v)); } });
-    try{ history.replaceState(null, "", "#"+q.toString()); }catch(_){}
-  }
-  function readUrl(){
-    var h = location.hash.replace(/^#/,""); if(!h) return false;
-    var q = new URLSearchParams(h);
-    KEYS.forEach(function(k){ if(q.has(k[0])) k[2](q.get(k[0])); });
-    state.spec = presetSpec(state.pattern);
-    FLAT.forEach(function(f){ if(q.has(f[0])){ var raw=q.get(f[0]); var v = f[2]==="b" ? raw==="1" : f[2]==="n" ? parseFloat(raw) : raw; if(f[2]!=="n" || !isNaN(v)) setPath(state.spec,f[1],v); } });
-    return true;
-  }
-
-  // ---------- 枠の描画（大小共通） ----------
-  var FRAME_HTML = '<img class="shot" alt=""><div class="ph"></div><div class="split"><img alt=""><img alt=""></div><div class="pip"><img alt=""></div>'
-    + '<div class="ov ov-prof"></div><div class="ov ov-title"><span></span></div><div class="ov ov-logo">LOGO</div><div class="ov ov-name"></div><div class="ov ov-cap"></div>';
-  function shotSrc(studio, sh){ return customImg[studio+":"+sh] || STUDIOS[studio].shots[sh].src; }
-  function capBlock(s, sh, sc){ // 字幕が占める高さ（cqh）
-    var size=parseFloat(s.cap.size)||1, fs=5.8*size;
-    if(sc==="emph" && s.emph.on) return (s.emph.style==="big" ? fs*2.1 : fs*1.5)*1.25 + 1.2;
-    var n = Math.min(SHOT_CAP[sh].length, s.cap.lines===1||s.cap.lines==="1" ? 1 : 2);
-    return n*(fs*1.25) + (n-1)*0.6 + 1.2;
-  }
-  function paintFrame(fr, s, sh, sc, studio){
-    if(!fr.firstChild) fr.innerHTML = FRAME_HTML;
-    var st = STUDIOS[studio], q=function(c){ return fr.querySelector(c); };
-    // 背景
-    var img=q(".shot"), ph=q(".ph");
-    img.onerror=function(){ img.style.display="none"; ph.style.display="block"; };
-    img.onload=function(){ img.style.display="block"; ph.style.display="none"; };
-    img.style.objectPosition = st.shots[sh].pos;
-    if(img.getAttribute("src")!==shotSrc(studio,sh)) img.src=shotSrc(studio,sh);
-    // 2分割・ワイプ
-    fr.classList.toggle("is-split", s.cam==="split");
-    fr.classList.toggle("is-pip", s.cam==="pip");
-    var sp=fr.querySelectorAll(".split img");
-    sp[0].src=shotSrc(studio, st.split.left.shot); sp[0].style.objectPosition=st.split.left.pos;
-    sp[1].src=shotSrc(studio, st.split.right.shot); sp[1].style.objectPosition=st.split.right.pos;
-    if(s.cam==="pip"){ img.src=shotSrc(studio, st.pip.main.shot); img.style.objectPosition=st.pip.main.pos; var pi=q(".pip img"); pi.src=shotSrc(studio, st.pip.small.shot); pi.style.objectPosition=st.pip.small.pos; }
-    // 字幕
-    var cap=q(".ov-cap"); cap.className="ov ov-cap"; cap.innerHTML="";
-    var showCap = s.cap.on && sc!=="profile";
-    if(showCap){
-      cap.classList.add("plate-"+s.cap.plate);
-      var fs = 5.8*(parseFloat(s.cap.size)||1);
-      cap.style.bottom = s.cap.bottom+"cqh";
-      cap.style.fontFamily = FONT_CSS[s.cap.font];
-      var stroke = s.cap.stroke==="none"?0 : s.cap.stroke==="thin"?0.06 : 0.11;
-      var shadow = s.cap.shadow==="none"?"none" : s.cap.shadow==="soft"?"0 0.25cqh 0.9cqh rgba(0,0,0,.75), 0 0 1.4cqh rgba(0,0,0,.45)" : "0.3cqw 0.5cqh 0 rgba(0,0,0,.9)";
-      var lines;
-      if(sc==="emph" && s.emph.on){ lines=[{t:SHOT_EMPH[sh], spk:SHOT_SPK[sh][0], emph:true}]; }
-      else { var raw=SHOT_CAP[sh].slice(0, (s.cap.lines===1||s.cap.lines==="1")?1:2); lines=raw.map(function(t,i){ return {t:t, spk:SHOT_SPK[sh][i]||0}; }); }
-      lines.forEach(function(l){
-        var d=document.createElement("span"); d.className="ln";
-        var size = l.emph ? (s.emph.style==="big" ? fs*2.1 : fs*1.5) : fs;
-        d.style.fontSize = size+"cqh";
-        var spkCol = s.cap.spk ? (l.spk===1 ? s.cap.c2 : s.cap.c1) : null;
-        var strokeMode = s.cap.spk && s.cap.spkMode==="stroke";
-        var col = strokeMode ? "#FFFFFF" : (spkCol || s.cap.color);
-        var strokeCol = strokeMode ? spkCol : "#111";
-        var strokeW = strokeMode ? Math.max(stroke, 0.06) : stroke;
-        var sh2 = shadow;
-        if(s.cap.plate==="white"){ strokeW=0; sh2="none"; }
-        d.style.color = col;
-        d.style.webkitTextStroke = strokeW ? (strokeW*size)+"cqh "+strokeCol : "0";
-        d.style.paintOrder="stroke fill";
-        d.style.textShadow = sh2;
-        if(l.emph && s.emph.style==="marker"){ d.innerHTML='<span class="mk">'+esc(l.t)+'</span>'; d.style.webkitTextStroke="0"; d.style.textShadow="none"; }
-        else d.textContent=l.t;
-        cap.appendChild(d);
-      });
-    }
-    // 話題タイトル
-    var ti=q(".ov-title"); ti.className="ov ov-title";
-    if(s.title.on && sc!=="profile"){ ti.classList.add(s.title.style, s.title.pos); ti.querySelector("span").textContent=s.title.text||""; ti.style.display="block"; } else ti.style.display="none";
-    // ロゴ
-    var lg=q(".ov-logo"); lg.className="ov ov-logo";
-    if(s.logo.on){ lg.classList.add(s.logo.style, s.logo.pos); lg.style.fontSize=(2.6*(parseFloat(s.logo.size)||1))+"cqh"; lg.style.display="block"; } else lg.style.display="none";
-    // 名前ラベル（字幕の上に載らない高さに置く）
-    var nm=q(".ov-name"); nm.className="ov ov-name";
-    if(s.name.on && sc!=="profile"){
-      nm.classList.add(s.name.style, s.name.pos);
-      nm.innerHTML = sh==="solo" ? '山田 花子<small>ホスト｜株式会社サンプル 代表</small>' : '佐藤 太郎<small>ゲスト｜サンプル工業 取締役</small>';
-      nm.style.bottom = (showCap ? (parseFloat(s.cap.bottom)+capBlock(s,sh,sc)+1.5) : 7)+"cqh";
-      nm.style.display="block";
-    } else nm.style.display="none";
-    // 冒頭のプロフィール場面（引き=2人分を下段に、寄り・1人=顔の横に1枚）
-    var pf=q(".ov-prof"); pf.className="ov ov-prof";
-    if(sc==="profile" && s.prof.on){
-      var y = s.prof.y==="auto" ? (sh==="wide" ? "bottom" : "middle") : s.prof.y;
-      var cards = sh==="wide" ? [PROFILES.host, PROFILES.guest] : sh==="solo" ? [PROFILES.host] : [PROFILES.guest];
-      pf.classList.add(sh==="wide" ? "pair" : "single", "y-"+y);
-      if(sh!=="wide"){ var side = s.prof.pos==="auto" ? st.shots[sh].prof : s.prof.pos; pf.classList.add(side); }
-      pf.innerHTML = cards.map(function(c){
-        var body = s.prof.style==="timeline" ? c.timeline : c.bio;
-        return '<div class="pcard '+s.prof.style+'"><div class="pn">'+esc(c.name)+'<small>'+esc(c.title)+'</small></div><div class="pb">'+esc(body)+'</div></div>';
-      }).join("");
-      pf.style.display= sh==="wide" ? "flex" : "block";
-    } else pf.style.display="none";
-  }
+  function currentPattern(){ return LB.patternById(state.pattern); }
+  function writeUrl(){ try{ history.replaceState(null, "", LB.encodeHash(state)); }catch(_){} }
+  function readUrl(){ var st = LB.decodeHash(location.hash); if(!st) return false; state.pattern=st.pattern; state.shot=st.shot; state.scene=st.scene; state.studio=st.studio; state.spec=st.spec; return true; }
 
   // ---------- パターンのカード ----------
   var miniFrames = {};
@@ -442,16 +135,16 @@
         var t=document.createElement("div"); t.className="pt-t";
         t.innerHTML='<span class="num">'+p.id+'</span><span><span class="nm">'+esc(p.name)+(p.ask?'<span class="ask">要相談</span>':'')+'</span><span class="ds">'+esc(p.desc)+'</span></span>';
         b.appendChild(fr); b.appendChild(t);
-        b.addEventListener("click", function(){ state.pattern=p.id; state.spec=presetSpec(p.id); renderAll(); });
+        b.addEventListener("click", function(){ state.pattern=p.id; state.spec=LB.presetSpec(p.id); renderAll(); });
         root.appendChild(b); miniFrames[p.id]=fr;
       });
     }
     PATTERNS.forEach(function(p){
       var b=root.querySelector('.pt[data-id="'+p.id+'"]'); b.setAttribute("aria-pressed", String(p.id===state.pattern));
-      var sp = p.id===state.pattern ? state.spec : presetSpec(p.id);
-      paintFrame(miniFrames[p.id], sp, state.shot, "normal", state.studio);
+      var sp = p.id===state.pattern ? state.spec : LB.presetSpec(p.id);
+      LB.paintFrame(miniFrames[p.id], sp, state.shot, "normal", state.studio, customImg);
     });
-    if(renderList.last!==state.pattern){ // パターンを変えたときだけ、そのカードを横スクロールで見える位置へ（ページ自体は動かさない）
+    if(renderList.last!==state.pattern){ // パターンを変えたときだけ、そのカードを横スクロールで見える位置へ
       var cur=root.querySelector('.pt[aria-pressed="true"]');
       if(cur){ var L=cur.offsetLeft-root.offsetLeft, R=L+cur.offsetWidth; if(L<root.scrollLeft) root.scrollLeft=L-8; else if(R>root.scrollLeft+root.clientWidth) root.scrollLeft=R-root.clientWidth+8; }
       renderList.last=state.pattern;
@@ -459,7 +152,6 @@
   }
 
   // ---------- 参考動画 ----------
-  function fmt(sec){ var m=Math.floor(sec/60), s=sec%60; return m+":"+(s<10?"0":"")+s; }
   function renderRef(){
     var p=currentPattern(), r=p.ref, th=$("refThumb");
     $("refTitle").textContent = "参考動画："+p.name;
@@ -468,12 +160,8 @@
       $("refMeta").textContent = r.program+"（"+r.channel+"）・"+fmt(r.start)+"〜";
       $("refSeen").textContent = "画面で見えるもの: "+r.seen;
       var im=document.createElement("img"); im.alt=r.program;
-      if(r.frame){ // 該当カットの静止画（出典は下のメタ欄に併記）
-        im.src=r.frame; im.onerror=function(){ im.onerror=null; im.src="https://i.ytimg.com/vi/"+encodeURIComponent(r.id)+"/maxresdefault.jpg"; };
-      }else{
-        im.src="https://i.ytimg.com/vi/"+encodeURIComponent(r.id)+"/maxresdefault.jpg";
-        im.onerror=function(){ im.onerror=null; im.src="https://i.ytimg.com/vi/"+encodeURIComponent(r.id)+"/hqdefault.jpg"; };
-      }
+      if(r.frame){ im.src=r.frame; im.onerror=function(){ im.onerror=null; im.src="https://i.ytimg.com/vi/"+encodeURIComponent(r.id)+"/maxresdefault.jpg"; }; }
+      else { im.src="https://i.ytimg.com/vi/"+encodeURIComponent(r.id)+"/maxresdefault.jpg"; im.onerror=function(){ im.onerror=null; im.src="https://i.ytimg.com/vi/"+encodeURIComponent(r.id)+"/hqdefault.jpg"; }; }
       th.appendChild(im);
       var pl=document.createElement("span"); pl.className="play"; th.appendChild(pl);
       var tm=document.createElement("span"); tm.className="tm"; tm.textContent=fmt(r.start)+"から再生"; th.appendChild(tm);
@@ -487,18 +175,6 @@
     var r=currentPattern().ref; if(!r || this.querySelector("iframe")) return;
     this.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+encodeURIComponent(r.id)+'?start='+(r.start|0)+'&autoplay=1&rel=0" title="参考動画" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
   });
-  function renderAllRefs(){
-    var t=$("allrefs");
-    var h='<tr><th style="width:36px">#</th><th style="width:150px">型</th><th>番組</th><th style="width:120px">シーン</th></tr>';
-    PATTERNS.forEach(function(p){
-      var r=p.ref;
-      h+='<tr'+(p.id===state.pattern?' class="cur"':'')+'><td>'+p.id+'</td><td>'+esc(p.name)+(p.ask?' <span class="ask">要相談</span>':'')+'</td><td>'
-        +(r ? esc(r.program)+'<span class="ch">'+esc(r.channel)+'</span>' : '収集中')
-        +'</td><td>'+(r ? '<a href="https://www.youtube.com/watch?v='+encodeURIComponent(r.id)+'&t='+(r.start|0)+'s" target="_blank" rel="noopener">'+fmt(r.start)+'〜 を開く</a>' : '')+'</td></tr>';
-    });
-    t.innerHTML=h;
-  }
-
   // ---------- 調整パネル ----------
   function ctl(def){
     var row=document.createElement("div"); row.className="row";
@@ -511,7 +187,7 @@
       el=document.createElement("select"); el.setAttribute("aria-label",def.t);
       def.opts.forEach(function(o){ var op=document.createElement("option"); op.value=o[0]; op.textContent=o[1]; if(String(v)===o[0]) op.selected=true; el.appendChild(op); });
       el.addEventListener("change", function(){ setPath(state.spec,def.path,el.value); renderAll(); });
-    }else if(def.type==="seg"){ // 書体などを実際の見た目で選ぶ
+    }else if(def.type==="seg"){
       el=document.createElement("span"); el.className="seg"; el.setAttribute("role","radiogroup"); el.setAttribute("aria-label",def.t);
       def.opts.forEach(function(o){ var b=document.createElement("button"); b.type="button"; b.textContent=o[1]; b.setAttribute("role","radio"); b.setAttribute("aria-checked", String(String(v)===o[0])); b.setAttribute("aria-pressed", String(String(v)===o[0])); if(o[2]) b.style.fontFamily=o[2]; b.addEventListener("click", function(){ setPath(state.spec,def.path,o[0]); renderAll(); }); el.appendChild(b); });
     }else if(def.type==="range"){
@@ -594,44 +270,10 @@
     secs.forEach(function(d,i){ if(openState[i]===false) d.open=false; root.appendChild(d); });
   }
 
-  // ---------- 依頼文 ----------
-  function camLabel(c){ return c==="auto"?"自動切替（話す人の寄り＋引き）" : c==="wide"?"引き固定" : c==="pip"?"ワイプ・小窓（要相談）" : "2分割（要相談）"; }
-  function bgmLabel(b){ return b==="none"?"なし" : b==="light"?"控えめに入れる" : "相談して決める"; }
-  function requestText(){
-    var s=state.spec, p=currentPattern();
-    var L=[];
-    L.push("【ポッドキャスト動画 編集依頼（Podcast Lookbook v1）】");
-    L.push("パターン: "+p.id+" "+p.name+(p.ask?"（要相談）":""));
-    if(s.cap.on){
-      L.push("字幕テロップ: あり／"+FONTS[s.cap.font]+"／大きさ "+Math.round(s.cap.size*100)+"%／下端から "+s.cap.bottom+"%／"
-        + (s.cap.spk ? "話す人で"+(s.cap.spkMode==="stroke"?"縁の色":"文字の色")+"を変える（ホスト "+s.cap.c1+"・ゲスト "+s.cap.c2+"）" : "文字色 "+s.cap.color)
-        + "／縁取り "+({none:"なし",thin:"細い",thick:"太い"})[s.cap.stroke]+"／影 "+({none:"なし",soft:"柔らかい",hard:"くっきり"})[s.cap.shadow]
-        + "／座布団 "+({none:"なし",band:"半透明の黒帯",white:"白（黒文字）"})[s.cap.plate]+"／最大 "+s.cap.lines+"行");
-    } else L.push("字幕テロップ: なし");
-    L.push("強調テロップ: "+(s.emph.on ? "あり／"+(s.emph.style==="big"?"大きい文字":"蛍光マーカー") : "なし"));
-    L.push("話題タイトル: "+(s.title.on ? "あり／"+({band:"半透明グレーの帯",white:"白座布団",dark:"黒座布団"})[s.title.style]+"／"+(s.title.pos==="tl"?"左上":"右上") : "なし"));
-    L.push("ロゴ: "+(s.logo.on ? "あり／"+({tr:"右上",tl:"左上",br:"右下",bl:"左下"})[s.logo.pos]+"／"+(s.logo.style==="plate"?"白プレート":"透過")+"／大きさ "+Math.round(s.logo.size*100)+"%" : "なし"));
-    L.push("名前ラベル: "+(s.name.on ? "あり／"+(s.name.pos==="bl"?"左下":"右下")+"／"+(s.name.style==="white"?"白":"黒") : "なし"));
-    L.push("冒頭のプロフィール場面: "+(s.prof.on ? "あり／"+({white:"白カード",dark:"半透明黒",timeline:"年表"})[s.prof.style]+"／引きは2人分を下段、寄りは"+({auto:"顔を避けた側",left:"左",center:"中央",right:"右"})[s.prof.pos]+"・"+({auto:"中段",top:"上段",middle:"中段",bottom:"下段"})[s.prof.y] : "なし"));
-    L.push("冒頭ダイジェスト: "+(s.digest?"あり":"なし"));
-    L.push("カメラ割り: "+camLabel(s.cam));
-    L.push("BGM: "+bgmLabel(s.bgm));
-    if(p.ref) L.push("参考動画: https://www.youtube.com/watch?v="+p.ref.id+"&t="+(p.ref.start|0)+"s （"+p.ref.program+"）");
-    L.push("Podcast Lookbook のURL: "+location.href);
-    L.push("");
-    L.push("--- style.json（Claude Code用） ---");
-    L.push(JSON.stringify({version:1, pattern:p.id, pattern_name:p.name, ref: p.ref ? {youtube_id:p.ref.id, start_sec:p.ref.start} : null, spec:s}, null, 2));
-    return L.join("\n");
-  }
+  // ---------- 依頼文・コピー ----------
   function toast(msg){ var t=$("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toast._tm); toast._tm=setTimeout(function(){ t.classList.remove("show"); }, 2200); }
-  function copyText(text, okMsg){
-    var box=$("copyBox"); box.value=text; box.classList.add("show");
-    var done=function(){ toast(okMsg); };
-    var fallback=function(){ box.focus(); box.select(); toast("コピーできない環境です。下の文をそのまま選んでコピーしてください"); };
-    try{ if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done, fallback); } else fallback(); }catch(_){ fallback(); }
-  }
-  $("btnCopy").addEventListener("click", function(){ writeUrl(); copyText(requestText(), "依頼文をコピーしました。チャットに貼ってください"); });
-  $("btnUrl").addEventListener("click", function(){ writeUrl(); copyText(location.href, "URLをコピーしました"); });
+  $("btnCopy").addEventListener("click", function(){ writeUrl(); LB.copyText(LB.requestText(state.spec, currentPattern(), {url:location.href}), $("copyBox"), toast, "依頼文をコピーしました。チャットに貼ってください"); });
+  $("btnUrl").addEventListener("click", function(){ writeUrl(); LB.copyText(location.href, $("copyBox"), toast, "URLをコピーしました"); });
 
   // ---------- 自分の画像（この画面の中だけ） ----------
   $("fileIn").addEventListener("change", function(){
@@ -643,8 +285,8 @@
   // ---------- タブ ----------
   function renderTabs(){
     var stt=$("studioTabs");
-    if(!stt.firstChild){ STUDIO_ORDER.forEach(function(k){ var b=document.createElement("button"); b.type="button"; b.dataset.studio=k; b.textContent=STUDIOS[k].label; b.addEventListener("click", function(){ state.studio=k; renderAll(); }); stt.appendChild(b); }); }
-    var one = STUDIO_ORDER.length<2; stt.hidden=one; stt.previousElementSibling.hidden=one;
+    if(!stt.firstChild){ LB.STUDIO_ORDER.forEach(function(k){ var b=document.createElement("button"); b.type="button"; b.dataset.studio=k; b.textContent=STUDIOS[k].label; b.addEventListener("click", function(){ state.studio=k; renderAll(); }); stt.appendChild(b); }); }
+    var one = LB.STUDIO_ORDER.length<2; stt.hidden=one; stt.previousElementSibling.hidden=one;
     Array.prototype.forEach.call(stt.querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", String(b.dataset.studio===state.studio)); });
     Array.prototype.forEach.call($("shotTabs").querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", String(b.dataset.shot===state.shot)); });
     Array.prototype.forEach.call($("sceneTabs").querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", String(b.dataset.scene===state.scene)); });
@@ -657,14 +299,12 @@
   // ---------- 全体 ----------
   function renderPreview(){
     var s=state.spec;
-    paintFrame($("frame"), s, state.shot, state.scene, state.studio);
+    LB.paintFrame($("frame"), s, state.shot, state.scene, state.studio, customImg);
     $("digestBadge").textContent = "冒頭ダイジェスト "+(s.digest?"あり":"なし"); $("digestBadge").className="badge"+(s.digest?" on":"");
-    $("camBadge").textContent = "カメラ割り "+camLabel(s.cam);
+    $("camBadge").textContent = "カメラ割り "+LB.camLabel(s.cam);
   }
-  function renderAll(){
-    renderList(); renderTabs(); renderPreview(); renderPanel(); renderRef(); renderAllRefs(); writeUrl();
-  }
-  if(!readUrl()){ state.spec=presetSpec(state.pattern); }
+  function renderAll(){ renderList(); renderTabs(); renderPreview(); renderPanel(); renderRef(); writeUrl(); }
+  if(!readUrl()){ state.spec=LB.presetSpec(state.pattern); }
   renderAll();
   window.addEventListener("hashchange", function(){ if(readUrl()) renderAll(); });
 })();
