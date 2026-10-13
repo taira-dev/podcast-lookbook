@@ -229,7 +229,7 @@
 
   // 既定（どのパターンにも無い項目はこれ）
   var BASE = {
-    cap:{on:true, font:"gothic", size:1.0, bottom:7, color:"#FFFFFF", spk:false, c1:"#FFFFFF", c2:"#FFF0A8", stroke:"thick", shadow:"soft", plate:"none", lines:2},
+    cap:{on:true, font:"gothic", size:1.0, bottom:7, color:"#FFFFFF", spk:false, spkMode:"fill", c1:"#FFFFFF", c2:"#FFF0A8", stroke:"thick", shadow:"soft", plate:"none", lines:2},
     emph:{on:false, style:"big"},
     title:{on:false, style:"band", pos:"tl", text:"第1回｜起業のきっかけ"},
     logo:{on:true, pos:"tr", style:"plate", size:1.0},
@@ -242,25 +242,25 @@
   // ref: 参考動画（2026-10-13 時点で公開・埋め込み可を確認。該当シーンの秒数から再生）
   var PATTERNS = [
     {id:1, name:"ミニマル", desc:"字幕なし。ロゴだけで映像を見せる", ask:false,
-      ref:{id:"ippawzv5_bQ", start:90, program:"COTEN RADIO #94「諸君、狂いたまえ」高杉晋作", channel:"歴史を面白く学ぶコテンラジオ", seen:"字幕・タイトル・ロゴ・名前ラベルのどれも無し。固定1カメの引き画で3人が机に並んで話す。文字要素ゼロの型。"},
+      ref:{id:"D8LFvXF2Q-c", start:300, program:"日経ビジネスLIVE 河合薫×清水哲太郎「経営と舞台の交差点」", channel:"日経ビジネス", seen:"1対1の固定2ショット。字幕・タイトル・名前ラベルは無く、右上に番組ロゴだけを常時表示。ライブ配信のアーカイブで720p。"},
       set:{cap:{on:false}, logo:{on:true,pos:"tr",style:"transparent"}}},
     {id:2, name:"白ゴシック", desc:"太いゴシックの白字幕。黒縁、座布団なし", ask:false,
-      ref:{id:"ozZfcj6rEI8", start:90, program:"PIVOT TALK 投資家の思考法【中小企業には“経営がない”】中川政七", channel:"PIVOT 公式チャンネル", seen:"ゴシック太字の白字幕に細い黒縁、座布団なし、下部中央1行。右上に番組ロゴ。話題が変わる所では左上に紺の帯で話題タイトル。冒頭20秒のダイジェストだけ黒座布団。"},
+      ref:{id:"NMpQ7ysG-xk", start:600, program:"渡部のサシ飲み 近藤太香巳「三木谷・熊谷」尊敬する経営者2人", channel:"渡部のサシ飲み", seen:"1対1（ホスト＋ゲスト）。ゴシック太字の白字幕に細い黒縁と薄い影、座布団なし、下部中央1行。左上に白文字＋下線の話題、右上に番組ロゴ。冒頭のダイジェストは赤と黄の大型明朝。"},
       set:{cap:{on:true,font:"gothic",stroke:"thick",shadow:"soft",plate:"none"}, logo:{on:true,pos:"tr",style:"plate"}}},
     {id:3, name:"白明朝", desc:"極太明朝に柔らかい影。左上に話題タイトル", ask:false,
       ref:{id:"hCYQprtIf6A", start:600, program:"崖っぷち#4【赤字1,000万超】亡き弟から会社を継いだ兄が明かす経営危機", channel:"青木康時〜100億達成までの全て〜", seen:"明朝体の白字幕に柔らかい黒い影、縁取りなし、座布団なし、下部中央1〜2行。左上に黒の半透明帯＋白明朝2行の話題タイトル、右上に章見出し。"},
       set:{cap:{on:true,font:"mincho",stroke:"thin",shadow:"soft",plate:"none"}, emph:{on:true,style:"big"}, title:{on:true,style:"band",pos:"tl"}, logo:{on:true,pos:"tr",style:"plate"}}},
-    {id:4, name:"話者色分け", desc:"話す人ごとに字幕の色を変える", ask:false,
-      ref:{id:"dZPK26M2kqE", start:195, program:"令虎アフタートーク［成田 悠輔］虎の楽屋トーク", channel:"令和の虎CHANNEL", seen:"ゴシック太字に白縁の字幕で、話す人が変わると文字色が黄・マゼンタ・青・緑などに切り替わる。下部中央1〜2行、座布団なし。左上に番組ロゴ。色と話者の対応は映像から推定（要確認）。"},
-      set:{cap:{on:true,font:"gothic",stroke:"thick",shadow:"soft",plate:"none",spk:true,c1:"#FFFFFF",c2:"#FFF0A8"}, title:{on:true,style:"band",pos:"tl"}, logo:{on:true,pos:"tr",style:"plate"}}},
+    {id:4, name:"話者色分け", desc:"話す人ごとに字幕の色（文字か縁）を変える", ask:false,
+      ref:{id:"0eWLOVrpbCs", start:900, program:"三崎優太×ひろゆき「ひろゆきに絶縁の真相を聞いたら…」", channel:"三崎優太 元青汁王子", seen:"車内の1対1。ゴシック太字の白字幕で、話す人によって縁の色が青とオレンジに切り替わる（文字色は両者とも白）。下部中央1行、座布団なし。左上に黒帯＋白文字の話題（キーワードは赤）。色と話者の対応は映像から推定。"},
+      set:{cap:{on:true,font:"gothic",stroke:"thick",shadow:"soft",plate:"none",spk:true,spkMode:"stroke",c1:"#1E7BE0",c2:"#F2801E"}, title:{on:true,style:"band",pos:"tl"}, logo:{on:true,pos:"tr",style:"plate"}}},
     {id:5, name:"半透明黒帯", desc:"字幕の下に半透明の黒い帯。映画字幕のように", ask:false,
-      ref:{id:"-_3Ex9p_PSg", start:600, program:"ReHacQ【石丸伸二vs乙武洋匡】衝撃初対談", channel:"ReHacQ−リハック−【公式】", seen:"白ゴシック太字の字幕の下に、文字幅ぶんの黒い半透明ボックスを敷いて下部中央1行。右上に半透明帯の話題タイトル、左上に番組ロゴ。冒頭には超大型の白明朝の見出し演出もある。"},
+      ref:{id:"kz9VfPZWXGk", start:120, program:"ReHacQ【東出昌大vs高橋弘樹】ウソと真実…魂の告白", channel:"ReHacQ−リハック−【公式】", seen:"MCなしの1対1。白ゴシック太字の字幕の下に、文字幅に合わせた黒の半透明ボックス（2行のときは画面幅の8割まで広がる）。下部左寄り。右上にマゼンタの角丸座布団で話題、左上に番組ロゴ。途中に左右2分割の場面もある。"},
       set:{cap:{on:true,font:"gothic",stroke:"none",shadow:"none",plate:"band",size:0.9}, logo:{on:true,pos:"tr",style:"transparent"}}},
     {id:6, name:"白座布団タイトル", desc:"左上に白い座布団と黒の太字。字幕は白ゴシック", ask:false,
       ref:{id:"d8lu3GuuZK8", start:600, program:"新R25「病むくらいならコムドットを辞めてもいい。」やまと", channel:"新R25チャンネル", seen:"左上に白い座布団＋左端の赤い縦バー＋黒ゴシック太字の話題タイトルを常時表示（キーフレーズに黄色マーカー）。字幕は白ゴシック太字に黒縁、キーワードだけ黄色。右上に文字ロゴ。"},
       set:{cap:{on:true,font:"gothic",stroke:"thick",shadow:"soft",plate:"none"}, title:{on:true,style:"white",pos:"tl"}, logo:{on:false}}},
     {id:7, name:"キーワード強調＋冒頭ダイジェスト", desc:"蛍光マーカーでキーワードを強調。冒頭にハイライト", ask:false,
-      ref:{id:"OKPW93SOuL4", start:2, program:"UNPLUGGED PODCAST Ep.21「モノの価値は自由だ」", channel:"Unplugged podcast", seen:"冒頭の約60秒がハイライトのダイジェスト。2秒と25秒で蛍光グリーンの帯＋黒太字のキーワード強調。ダイジェスト中の字幕は白明朝と大きめの白ゴシックを話者の横に配置。本編は字幕なし。"},
+      ref:{id:"t3zAPootMoU", start:30, program:"スタートアップ オフレコ対談 EP.192 YC最新バッチ総ざらい 福山太郎", channel:"スタートアップ オフレコ対談", seen:"1対1（ホスト＋ゲスト）。冒頭に「ダイジェスト」ラベル付きのハイライトがあり、黒ボックス＋白ゴシックの見出しの中でキーワードだけ水色＋下線で強調。本編は字幕なしで、映像の下の帯に2人分の名前と肩書を常時表示。720p。蛍光色の帯ではなく下線と色替えで強調する例。"},
       set:{cap:{on:true,font:"gothic",stroke:"thick",shadow:"soft",plate:"none"}, emph:{on:true,style:"marker"}, logo:{on:true,pos:"tl",style:"transparent"}, digest:true}},
     {id:8, name:"ネームプレート", desc:"名前と肩書のプレートを出す。登場時、または出し続ける", ask:false,
       ref:{id:"5N6_z3gaXks", start:90, program:"TBS CROSS DIG 1on1 Podcastプロデューサー・野村高文", channel:"TBS CROSS DIG with Bloomberg", seen:"ゲストの登場時に、黒＋金の大きなロワーサード（名前・肩書・経歴）を左下に表示。右上に黒帯の話題タイトル（キーワードは金色）、左上にチャンネルロゴ。発言字幕はなし。プレートは冒頭だけで、常時表示ではない。"},
@@ -269,7 +269,7 @@
       ref:{id:"LJG3mbjhwfo", start:400, program:"【堀江の予言】2026年は”この職業”が終わります（年末トーク 桑田×堀江）", channel:"桑田龍征", seen:"大きめのゴシック極太・白文字に太い青縁と黒い影、下部中央1〜2行。1000秒付近は黄縁、1500秒付近は画面幅いっぱいの超大型と、縁の色と大きさで強弱を付ける。左上に多色の番組タイトル、右上に次の話題。"},
       set:{cap:{on:true,font:"gothic",stroke:"thick",shadow:"hard",plate:"none",size:1.3,spk:true,c1:"#FFFFFF",c2:"#FFE033",lines:2}, emph:{on:true,style:"big"}, title:{on:true,style:"white",pos:"tl"}, logo:{on:true,pos:"tr",style:"plate"}}},
     {id:10, name:"2分割／ワイプ", desc:"2人を同時に見せる画面レイアウト", ask:true,
-      ref:{id:"K7wOQ1dRNM4", start:90, program:"ReHacQ【中島聡vs天才AI技術者】８割が失業？民主主義に革命？", channel:"ReHacQ−リハック−【公式】", seen:"画面を左右2分割し、左にスタジオ、右にリモート出演者を常時同時表示。字幕は白ゴシック太字に黒縁で、分割をまたいで下部に1〜2行。右上にマゼンタの角丸座布団で話題。左上に番組ロゴ。ワイプ（小窓）の実例は未収集。"},
+      ref:{id:"IjqGWzLvkUY", start:90, program:"TBS CROSS DIG 1on1 Tech YouTube創業者スティーブ・チェン", channel:"TBS CROSS DIG with Bloomberg", seen:"スタジオのホストとリモートのゲストの1対1。左右2分割で2人を同時に見せる場面と、ゲストの1ショットを行き来する。字幕はゲストの英語を訳した白ゴシックを黒の半透明ボックス（2行・幅広）で下部左寄りに。右上に黒帯＋白文字の話題（キーワードは金色）、左上にロゴ。ワイプ（小窓）の実例は未収集。"},
       set:{cap:{on:true,font:"gothic",stroke:"thick",shadow:"soft",plate:"none"}, logo:{on:true,pos:"tr",style:"plate"}, cam:"split"}}
   ];
 
@@ -299,7 +299,7 @@
     ["sc", function(){return state.scene;}, function(v){ if(["normal","emph","profile"].indexOf(v)>=0) state.scene=v; }]
   ];
   var FLAT = [ // [urlkey, path, type]
-    ["co","cap.on","b"],["cf","cap.font","s"],["cs","cap.size","n"],["cb","cap.bottom","n"],["cc","cap.color","s"],["ck","cap.spk","b"],["c1","cap.c1","s"],["c2","cap.c2","s"],["cst","cap.stroke","s"],["csh","cap.shadow","s"],["cp","cap.plate","s"],["cl","cap.lines","n"],
+    ["co","cap.on","b"],["cf","cap.font","s"],["cs","cap.size","n"],["cb","cap.bottom","n"],["cc","cap.color","s"],["ck","cap.spk","b"],["ckm","cap.spkMode","s"],["c1","cap.c1","s"],["c2","cap.c2","s"],["cst","cap.stroke","s"],["csh","cap.shadow","s"],["cp","cap.plate","s"],["cl","cap.lines","n"],
     ["eo","emph.on","b"],["es","emph.style","s"],
     ["to","title.on","b"],["ts","title.style","s"],["tp","title.pos","s"],["tt","title.text","s"],
     ["lo","logo.on","b"],["lp","logo.pos","s"],["ls","logo.style","s"],["lz","logo.size","n"],
@@ -372,10 +372,14 @@
         var d=document.createElement("span"); d.className="ln";
         var size = l.emph ? (s.emph.style==="big" ? fs*2.1 : fs*1.5) : fs;
         d.style.fontSize = size+"cqh";
-        var col = s.cap.spk ? (l.spk===1 ? s.cap.c2 : s.cap.c1) : s.cap.color;
+        var spkCol = s.cap.spk ? (l.spk===1 ? s.cap.c2 : s.cap.c1) : null;
+        var strokeMode = s.cap.spk && s.cap.spkMode==="stroke";
+        var col = strokeMode ? "#FFFFFF" : (spkCol || s.cap.color);
+        var strokeCol = strokeMode ? spkCol : "#111";
+        var strokeW = strokeMode ? Math.max(stroke, 0.06) : stroke;
         d.style.color = col;
-        if(s.cap.plate==="white"){ stroke=0; shadow="none"; }
-        d.style.webkitTextStroke = stroke ? (stroke*size)+"cqh #111" : "0";
+        if(s.cap.plate==="white"){ strokeW=0; shadow="none"; }
+        d.style.webkitTextStroke = strokeW ? (strokeW*size)+"cqh "+strokeCol : "0";
         d.style.paintOrder="stroke fill";
         d.style.textShadow = shadow;
         if(l.emph && s.emph.style==="marker"){ d.innerHTML='<span class="mk">'+esc(l.t)+'</span>'; d.style.webkitTextStroke="0"; d.style.textShadow="none"; }
@@ -478,7 +482,7 @@
   function section(title, on, rows, noteText){
     var d=document.createElement("details"); d.open=true;
     var sm=document.createElement("summary"); sm.innerHTML=esc(title)+'<span class="st">'+(on===null?"":(on?"あり":"なし"))+'</span>'; d.appendChild(sm);
-    rows.forEach(function(r){ d.appendChild(r); });
+    rows.forEach(function(r){ if(r) d.appendChild(r); });
     if(noteText){ var n=document.createElement("div"); n.className="note"; n.textContent=noteText; d.appendChild(n); }
     return d;
   }
@@ -495,7 +499,8 @@
       ctl({t:"大きさ",type:"range",path:"cap.size",min:0.7,max:1.5,step:0.05}),
       ctl({t:"下端の位置",type:"range",path:"cap.bottom",min:3,max:22,step:1}),
       ctl({t:"話す人で色分け",type:"toggle",path:"cap.spk"}),
-      s.cap.spk ? ctl({t:"色（ホスト／ゲスト）",type:"colors",paths:["cap.c1","cap.c2"],names:["ホストの色","ゲストの色"]}) : ctl({t:"文字色",type:"color",path:"cap.color"}),
+      s.cap.spk ? ctl({t:"色分けの方法",type:"select",path:"cap.spkMode",opts:[["fill","文字の色を変える"],["stroke","縁の色を変える"]]}) : ctl({t:"文字色",type:"color",path:"cap.color"}),
+      s.cap.spk ? ctl({t:"色（ホスト／ゲスト）",type:"colors",paths:["cap.c1","cap.c2"],names:["ホストの色","ゲストの色"]}) : null,
       ctl({t:"縁取り",type:"select",path:"cap.stroke",opts:[["none","なし"],["thin","細い"],["thick","太い"]]}),
       ctl({t:"影",type:"select",path:"cap.shadow",opts:[["none","なし"],["soft","柔らかい"],["hard","くっきり"]]}),
       ctl({t:"座布団",type:"select",path:"cap.plate",opts:[["none","なし"],["band","半透明の黒帯"],["white","白（黒文字）"]]}),
@@ -544,7 +549,7 @@
     L.push("パターン: "+p.id+" "+p.name+(p.ask?"（要相談）":""));
     if(s.cap.on){
       L.push("字幕テロップ: あり／"+FONTS[s.cap.font]+"／大きさ "+Math.round(s.cap.size*100)+"%／下端から "+s.cap.bottom+"%／"
-        + (s.cap.spk ? "話す人で色分け（ホスト "+s.cap.c1+"・ゲスト "+s.cap.c2+"）" : "文字色 "+s.cap.color)
+        + (s.cap.spk ? "話す人で"+(s.cap.spkMode==="stroke"?"縁の色":"文字の色")+"を変える（ホスト "+s.cap.c1+"・ゲスト "+s.cap.c2+"）" : "文字色 "+s.cap.color)
         + "／縁取り "+({none:"なし",thin:"細い",thick:"太い"})[s.cap.stroke]+"／影 "+({none:"なし",soft:"柔らかい",hard:"くっきり"})[s.cap.shadow]
         + "／座布団 "+({none:"なし",band:"半透明の黒帯",white:"白（黒文字）"})[s.cap.plate]+"／最大 "+s.cap.lines+"行");
     } else L.push("字幕テロップ: なし");

@@ -28,7 +28,7 @@
   "ref": { "youtube_id": "...", "start_sec": 600 },
   "spec": {
     "cap":   { "on": true, "font": "mincho|gothic|maru", "size": 1.0, "bottom": 7, "color": "#FFFFFF",
-               "spk": false, "c1": "#FFFFFF", "c2": "#FFF0A8", "stroke": "none|thin|thick",
+               "spk": false, "spkMode": "fill|stroke", "c1": "#FFFFFF", "c2": "#FFF0A8", "stroke": "none|thin|thick",
                "shadow": "none|soft|hard", "plate": "none|band|white", "lines": 2 },
     "emph":  { "on": true, "style": "big|marker" },
     "title": { "on": true, "style": "band|white|dark", "pos": "tl|tr", "text": "..." },
@@ -43,7 +43,7 @@
 ```
 
 - `size` は字幕の高さの倍率（1.0 = 画面高の約5.8%）、`bottom` は画面下端からの位置（%）
-- `spk` が true のとき、ホストは `c1`、ゲストは `c2` の色
+- `spk` が true のとき、ホストは `c1`、ゲストは `c2` の色。`spkMode` が `fill` なら文字の色、`stroke` なら縁の色（文字は白）
 - `cam` と `bgm` は依頼文に文字で入るだけで、プレビューには出ない（`split` は編集側で要相談）
 
 ## 公開
