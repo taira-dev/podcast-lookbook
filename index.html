@@ -75,14 +75,20 @@
   .ov-name.white{background:rgba(255,255,255,.94);color:#1b1b1b} .ov-name.dark{background:rgba(20,20,20,.85);color:#fff}
   .ov-name.bl{left:4.5cqw} .ov-name.br{right:4.5cqw;text-align:right}
   .ov-name small{display:block;font-weight:500;font-size:.8em;opacity:.85}
-  .ov-prof{width:34cqw;padding:2cqh 2.2cqw;font-family:var(--f-gothic);line-height:1.5}
-  .ov-prof.white,.ov-prof.timeline{background:rgba(255,255,255,.95);color:#1b1b1b}
-  .ov-prof.dark{background:rgba(10,10,10,.74);color:#fff}
-  .ov-prof.left{left:5cqw} .ov-prof.right{right:5cqw} .ov-prof.center{left:33cqw}
-  .ov-prof.y-top{top:15cqh} .ov-prof.y-middle{top:27cqh}
-  .ov-prof .pn{font-weight:900;font-size:3.4cqh;border-bottom:1px solid currentColor;padding-bottom:0.9cqh;margin-bottom:1.1cqh}
-  .ov-prof .pn small{font-weight:500;font-size:.55em;margin-left:.6em}
-  .ov-prof .pb{font-size:2.1cqh;white-space:pre-line}
+  /* 冒頭のプロフィール: 寄り・1人は顔の横に1枚、引きは下段に2人分 */
+  .ov-prof{font-family:var(--f-gothic);line-height:1.5}
+  .ov-prof.single{width:34cqw}
+  .ov-prof.single.left{left:5cqw} .ov-prof.single.right{right:5cqw} .ov-prof.single.center{left:33cqw}
+  .ov-prof.pair{left:4.5cqw;right:4.5cqw;display:flex;justify-content:space-between;align-items:flex-end;gap:2cqw}
+  .ov-prof.pair .pcard{width:31cqw}
+  .ov-prof.y-top{top:15cqh} .ov-prof.y-middle{top:27cqh} .ov-prof.y-bottom{bottom:9cqh}
+  .pcard{padding:1.8cqh 2.2cqw}
+  .pcard.white,.pcard.timeline{background:rgba(255,255,255,.95);color:#1b1b1b}
+  .pcard.dark{background:rgba(10,10,10,.74);color:#fff}
+  .pcard .pn{font-weight:900;font-size:3.4cqh;border-bottom:1px solid currentColor;padding-bottom:0.9cqh;margin-bottom:1.1cqh;white-space:nowrap}
+  .pcard .pn small{font-weight:500;font-size:.55em;margin-left:.6em}
+  .pcard .pb{font-size:2.1cqh;white-space:pre-line}
+  .ov-prof.pair .pcard .pn{font-size:3.1cqh} .ov-prof.pair .pcard .pb{font-size:1.95cqh}
   /* 下段 */
   .grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px;margin-top:10px;align-items:start}
   .col{min-width:0}
@@ -222,6 +228,10 @@
   };
   var SHOT_EMPH = { wide:"人に会い続けた1年", close:"売上ゼロの半年", solo:"独立した理由" };
   var SHOT_SPK  = { wide:[0,1], close:[1], solo:[0] };   // 行ごとの話者（0=ホスト, 1=ゲスト）。引き=ホストが先に話し、ゲストが返す
+  var PROFILES = {
+    host:  { name:"山田 花子", title:"ホスト｜株式会社サンプル 代表", bio:"広告代理店を経て独立。\nマーケティング支援と番組の企画を担当。", timeline:"2010　広告代理店に入社\n2017　株式会社サンプル 創業\n2024　本番組を開始" },
+    guest: { name:"佐藤 太郎", title:"ゲスト｜サンプル工業 取締役", bio:"大手メーカーを経て家業へ。\n製造業のDXと新規事業を担当。", timeline:"2012　大手メーカーに入社\n2018　家業のサンプル工業へ\n2023　取締役に就任" }
+  };
   var FONTS = { mincho:"明朝", gothic:"ゴシック", maru:"丸ゴシック" };
   var FONT_CSS = { mincho:"var(--f-mincho)", gothic:"var(--f-gothic)", maru:"var(--f-maru)" };
 
@@ -244,7 +254,7 @@
     title:{on:false, style:"band", pos:"tl", text:"第1回｜起業のきっかけ"},
     logo:{on:true, pos:"tr", style:"plate", size:1.0},
     name:{on:false, pos:"bl", style:"white"},
-    prof:{on:false, style:"white", pos:"auto", y:"middle"},
+    prof:{on:false, style:"white", pos:"auto", y:"auto"},
     digest:false, cam:"auto", bgm:"none"
   };
 
@@ -406,15 +416,18 @@
       nm.style.bottom = (showCap ? (parseFloat(s.cap.bottom)+capBlock(s,sh,sc)+1.5) : 7)+"cqh";
       nm.style.display="block";
     } else nm.style.display="none";
-    // 冒頭のプロフィール場面
+    // 冒頭のプロフィール場面（引き=2人分を下段に、寄り・1人=顔の横に1枚）
     var pf=q(".ov-prof"); pf.className="ov ov-prof";
     if(sc==="profile" && s.prof.on){
-      var side = s.prof.pos==="auto" ? st.shots[sh].prof : s.prof.pos;
-      pf.classList.add(s.prof.style, side, "y-"+s.prof.y);
-      pf.innerHTML = s.prof.style==="timeline"
-        ? '<div class="pn">佐藤 太郎<small>サンプル工業 取締役</small></div><div class="pb">2012　大手メーカーに入社\n2018　家業のサンプル工業へ\n2023　取締役に就任\n2025　新規事業を立ち上げ</div>'
-        : '<div class="pn">佐藤 太郎<small>サンプル工業 取締役</small></div><div class="pb">大手メーカーを経て家業へ。\n製造業のDXと新規事業を担当。\n著書『小さな工場の大きな挑戦』</div>';
-      pf.style.display="block";
+      var y = s.prof.y==="auto" ? (sh==="wide" ? "bottom" : "middle") : s.prof.y;
+      var cards = sh==="wide" ? [PROFILES.host, PROFILES.guest] : sh==="solo" ? [PROFILES.host] : [PROFILES.guest];
+      pf.classList.add(sh==="wide" ? "pair" : "single", "y-"+y);
+      if(sh!=="wide"){ var side = s.prof.pos==="auto" ? st.shots[sh].prof : s.prof.pos; pf.classList.add(side); }
+      pf.innerHTML = cards.map(function(c){
+        var body = s.prof.style==="timeline" ? c.timeline : c.bio;
+        return '<div class="pcard '+s.prof.style+'"><div class="pn">'+esc(c.name)+'<small>'+esc(c.title)+'</small></div><div class="pb">'+esc(body)+'</div></div>';
+      }).join("");
+      pf.style.display= sh==="wide" ? "flex" : "block";
     } else pf.style.display="none";
   }
 
@@ -569,10 +582,10 @@
     var pfRows=[ctl({t:"プロフィール場面",type:"toggle",path:"prof.on"})];
     if(s.prof.on) pfRows=pfRows.concat([
       ctl({t:"見せ方",type:"select",path:"prof.style",opts:[["white","白カード"],["dark","半透明黒"],["timeline","年表"]]}),
-      ctl({t:"左右",type:"select",path:"prof.pos",opts:[["auto","自動（顔を避ける）"],["left","左"],["center","中央"],["right","右"]]}),
-      ctl({t:"高さ",type:"select",path:"prof.y",opts:[["middle","中段"],["top","上段"]]})
+      ctl({t:"左右（寄り・1人）",type:"select",path:"prof.pos",opts:[["auto","自動（顔を避ける）"],["left","左"],["center","中央"],["right","右"]]}),
+      ctl({t:"高さ",type:"select",path:"prof.y",opts:[["auto","自動（引き=下段・寄り=中段）"],["top","上段"],["middle","中段"],["bottom","下段"]]})
     ]);
-    secs.push(section("冒頭のプロフィール場面", s.prof.on, pfRows, "冒頭で名前・肩書・経歴を数秒出します。プレビューは「冒頭のプロフィール」の場面で"));
+    secs.push(section("冒頭のプロフィール場面", s.prof.on, pfRows, "冒頭で名前・肩書・経歴を数秒出します。引きでは2人分を下段に、寄り・1人では顔の横に出します。プレビューは「冒頭のプロフィール」の場面で"));
     secs.push(section("冒頭ダイジェスト", s.digest, [ctl({t:"冒頭ダイジェスト",type:"toggle",path:"digest"})], "本編の見どころを60〜90秒にまとめて冒頭に置きます（絵の見本はありません）"));
     secs.push(section("カメラ割り・音（文字の指定）", null, [
       ctl({t:"カメラ割り",type:"select",path:"cam",opts:[["auto","自動切替"],["wide","引き固定"],["split","2分割（要相談）"],["pip","ワイプ・小窓（要相談）"]]}),
@@ -599,7 +612,7 @@
     L.push("話題タイトル: "+(s.title.on ? "あり／"+({band:"半透明グレーの帯",white:"白座布団",dark:"黒座布団"})[s.title.style]+"／"+(s.title.pos==="tl"?"左上":"右上") : "なし"));
     L.push("ロゴ: "+(s.logo.on ? "あり／"+({tr:"右上",tl:"左上",br:"右下",bl:"左下"})[s.logo.pos]+"／"+(s.logo.style==="plate"?"白プレート":"透過")+"／大きさ "+Math.round(s.logo.size*100)+"%" : "なし"));
     L.push("名前ラベル: "+(s.name.on ? "あり／"+(s.name.pos==="bl"?"左下":"右下")+"／"+(s.name.style==="white"?"白":"黒") : "なし"));
-    L.push("冒頭のプロフィール場面: "+(s.prof.on ? "あり／"+({white:"白カード",dark:"半透明黒",timeline:"年表"})[s.prof.style]+"／"+({auto:"顔を避けて自動",left:"左",center:"中央",right:"右"})[s.prof.pos]+"・"+(s.prof.y==="top"?"上段":"中段") : "なし"));
+    L.push("冒頭のプロフィール場面: "+(s.prof.on ? "あり／"+({white:"白カード",dark:"半透明黒",timeline:"年表"})[s.prof.style]+"／引きは2人分を下段、寄りは"+({auto:"顔を避けた側",left:"左",center:"中央",right:"右"})[s.prof.pos]+"・"+({auto:"中段",top:"上段",middle:"中段",bottom:"下段"})[s.prof.y] : "なし"));
     L.push("冒頭ダイジェスト: "+(s.digest?"あり":"なし"));
     L.push("カメラ割り: "+camLabel(s.cam));
     L.push("BGM: "+bgmLabel(s.bgm));
