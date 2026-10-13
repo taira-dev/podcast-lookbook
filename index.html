@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Podcast Lookbook｜ポッドキャスト動画の編集見本帳</title>
+<meta name="description" content="Podcast Lookbook。参考動画10本から編集の型を選び、字幕・話題タイトル・ロゴを調整して見え方を確認し、依頼文をコピーできるポッドキャスト動画の編集見本帳">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Noto+Sans+JP:wght@500;700;900&family=Zen+Maru+Gothic:wght@700;900&display=swap">
+<style>
+  /* レイアウト: 左=パターン一覧 / 中=プレビューと参考動画 / 右=調整。トーン: 黒×オフ白×オレンジ・明朝・点線 */
+  :root{
+    --bg:#F2F0EA; --paper:#FBFAF7; --ink:#1B1B1B; --muted:#6B675F; --line:#D8D3C8; --soft:#E9E5DB;
+    --accent:#E0511E; --accent-soft:#FBE4DA; --ok:#2E7D4F; --warn:#9A6B00; --warn-soft:#FFF1CC;
+    --display:"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
+    --body:"Noto Sans JP","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+    --f-mincho:"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
+    --f-gothic:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;
+    --f-maru:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",sans-serif;
+    color-scheme: light;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.7;padding-block:0 48px;padding-inline:16px}
+  a{color:var(--accent)}
+  button,select,input{font:inherit;color:inherit}
+  .wrap{max-width:1360px;margin:0 auto}
+  header{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 20px;padding:22px 0 14px;border-bottom:1px dotted var(--line)}
+  .brand{font-family:var(--display);font-weight:900;letter-spacing:.18em;font-size:14px}
+  .brand small{display:block;font-family:var(--body);font-weight:500;letter-spacing:.04em;font-size:11px;color:var(--muted)}
+  h1{font-family:var(--display);font-weight:700;font-size:22px;margin:0;letter-spacing:.02em;text-wrap:balance}
+  .lead{color:var(--muted);font-size:13px;margin:0;flex-basis:100%}
+  .grid{display:grid;grid-template-columns:200px minmax(0,1fr) 300px;gap:20px;margin-top:18px;align-items:start}
+  .col{min-width:0}
+  .label{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--muted);margin:0 0 8px}
+  /* パターン一覧 */
+  .plist{display:flex;flex-direction:column;gap:6px}
+  .pt{display:flex;gap:10px;align-items:flex-start;text-align:left;border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:8px 10px;cursor:pointer;line-height:1.4}
+  .pt:hover{border-color:var(--ink)}
+  .pt[aria-pressed="true"]{border-color:var(--accent);background:#fff;box-shadow:inset 3px 0 0 var(--accent)}
+  .pt .num{font-family:var(--display);font-weight:900;font-size:16px;color:var(--accent);min-width:1.4em;font-variant-numeric:tabular-nums}
+  .pt .nm{font-weight:700;font-size:13px}
+  .pt .ds{display:block;font-size:11px;color:var(--muted)}
+  .pt .ask{display:inline-block;font-size:10px;color:var(--warn);background:var(--warn-soft);padding:0 5px;border-radius:3px;margin-left:4px;vertical-align:1px}
+  /* プレビュー */
+  .ptitle{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin:0 0 8px}
+  .ptitle h2{font-family:var(--display);font-size:20px;margin:0;font-weight:700}
+  .ptitle .desc{color:var(--muted);font-size:13px}
+  .tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}
+  .tabs .grp{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--paper)}
+  .tabs button{border:0;background:transparent;padding:4px 11px;font-size:12px;cursor:pointer;color:var(--muted)}
+  .tabs button[aria-pressed="true"]{background:var(--ink);color:#fff}
+  .frame{position:relative;aspect-ratio:16/9;max-width:100%;overflow:hidden;border-radius:6px;background:#111;container-type:size;color:#fff;box-shadow:0 1px 0 var(--line)}
+  .frame .shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .frame .shot.ph{background:radial-gradient(60% 55% at 32% 62%,#6f6557 0,rgba(0,0,0,0) 62%),radial-gradient(60% 55% at 68% 60%,#55616a 0,rgba(0,0,0,0) 62%),linear-gradient(180deg,#3a3f4b,#141720)}
+  .frame .split{position:absolute;inset:0;display:none;grid-template-columns:1fr 1fr;gap:0.4cqw;background:#000}
+  .frame.is-split .split{display:grid}
+  .frame.is-split .shot{display:none}
+  .frame .split img{width:100%;height:100%;object-fit:cover;display:block}
+  .person{position:absolute;bottom:0;width:26%;height:66%;border-radius:40% 40% 8% 8%/50% 50% 6% 6%;background:linear-gradient(180deg,#8a7f70,#4a4540);opacity:.9}
+  .person::before{content:"";position:absolute;top:-28%;left:30%;width:40%;aspect-ratio:1;border-radius:50%;background:#b9a88f}
+  .person.a{left:16%} .person.b{right:16%;background:linear-gradient(180deg,#7d8a8c,#3d4446)} .person.b::before{background:#a9b3b5}
+  .person.solo{left:37%;width:30%;height:72%}
+  .ov{position:absolute;pointer-events:none}
+  #ovCap{left:0;right:0;text-align:center;padding-inline:4cqw;display:flex;flex-direction:column;align-items:center;gap:0.6cqh}
+  #ovCap .ln{display:inline-block;white-space:nowrap;line-height:1.25;font-weight:900}
+  #ovCap.plate-band .ln{background:rgba(0,0,0,.62);padding:0.4cqh 1.2cqw}
+  #ovCap.plate-white .ln{background:#fff;color:#1b1b1b !important;padding:0.4cqh 1.2cqw}
+  #ovCap .mk{background:#00F842;color:#111;padding:0 .3em;-webkit-text-stroke:0;text-shadow:none}
+  #ovTitle{top:5.5cqh;max-width:64cqw;font-weight:700;line-height:1.3;font-family:var(--f-gothic)}
+  #ovTitle.band{background:rgba(40,40,40,.62);color:#fff;padding:1.2cqh 2cqw}
+  #ovTitle.white{background:#fff;color:#141414;padding:1.1cqh 2cqw;font-weight:900;transform:skewX(-8deg);box-shadow:0.4cqw 0.5cqw 0 rgba(0,0,0,.65)}
+  #ovTitle.white span{display:inline-block;transform:skewX(8deg)}
+  #ovTitle.dark{background:#141414;color:#fff;padding:1.1cqh 2cqw;font-weight:900}
+  #ovTitle.tl{left:4.5cqw} #ovTitle.tr{right:4.5cqw;text-align:right}
+  #ovLogo{font-family:var(--f-gothic);font-weight:900;letter-spacing:.14em;line-height:1}
+  #ovLogo.plate{background:#fff;color:#1b1b1b;border-radius:0.5cqw;padding:0.9cqh 1.6cqw}
+  #ovLogo.transparent{color:#fff;text-shadow:0 0.3cqh 0.8cqh rgba(0,0,0,.6)}
+  #ovLogo.tr{right:3cqw;top:4.5cqh} #ovLogo.tl{left:3cqw;top:4.5cqh} #ovLogo.br{right:3cqw;bottom:4.5cqh} #ovLogo.bl{left:3cqw;bottom:4.5cqh}
+  #ovName{font-family:var(--f-gothic);font-weight:700;font-size:2.4cqh;line-height:1.3;bottom:22cqh;padding:0.6cqh 1.6cqw}
+  #ovName.white{background:rgba(255,255,255,.94);color:#1b1b1b} #ovName.dark{background:rgba(20,20,20,.85);color:#fff}
+  #ovName.bl{left:4.5cqw} #ovName.br{right:4.5cqw}
+  #ovName small{display:block;font-weight:500;font-size:.8em;opacity:.85}
+  #ovProf{top:14cqh;width:38cqw;padding:2.2cqh 2.4cqw;font-family:var(--f-gothic);line-height:1.5}
+  #ovProf.white{left:6cqw;background:rgba(255,255,255,.95);color:#1b1b1b}
+  #ovProf.dark{left:6cqw;background:rgba(10,10,10,.72);color:#fff}
+  #ovProf.timeline{right:6cqw;background:rgba(255,255,255,.95);color:#1b1b1b}
+  #ovProf .pn{font-weight:900;font-size:3.6cqh;border-bottom:1px solid currentColor;padding-bottom:1cqh;margin-bottom:1.2cqh}
+  #ovProf .pn small{font-weight:500;font-size:.55em;margin-left:.6em}
+  #ovProf .pb{font-size:2.2cqh;white-space:pre-line}
+  .under{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+  .btn{border:1px solid var(--ink);background:var(--paper);border-radius:8px;padding:7px 13px;font-size:13px;cursor:pointer;line-height:1.3}
+  .btn:hover{background:#fff}
+  .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .btn.primary:hover{background:#000}
+  .btn.accent{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .btn:focus-visible,.pt:focus-visible,.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .badge{font-size:11px;color:var(--muted);border:1px dotted var(--line);border-radius:999px;padding:2px 9px}
+  .badge.on{color:var(--ok);border-color:var(--ok)}
+  .hint{font-size:12px;color:var(--muted);margin:6px 0 0}
+  .copybox{width:100%;margin-top:8px;font-family:ui-monospace,Menlo,monospace;font-size:12px;border:1px solid var(--line);border-radius:6px;background:var(--paper);padding:8px 10px;min-height:120px;resize:vertical;display:none}
+  .copybox.show{display:block}
+  .ref{grid-column:2;margin-top:4px;padding-top:16px;border-top:1px dotted var(--line)}
+  .ref h3{font-family:var(--display);font-size:16px;margin:0 0 4px;font-weight:700}
+  .ref .meta{font-size:13px;color:var(--muted)}
+  .ref .seen{font-size:13px;margin:6px 0 10px}
+  .yt{position:relative;aspect-ratio:16/9;max-width:100%;background:var(--soft);border-radius:6px;overflow:hidden;display:none}
+  .yt.show{display:block}
+  .yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  /* 調整パネル */
+  .panel{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:4px 14px 10px}
+  details{border-top:1px dotted var(--line);padding:6px 0}
+  details:first-of-type{border-top:0}
+  summary{cursor:pointer;font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px;list-style:none;padding:6px 0}
+  summary::-webkit-details-marker{display:none}
+  summary .st{margin-left:auto;font-size:11px;color:var(--muted);font-weight:500}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:4px 0;font-size:12.5px}
+  .row label{color:var(--ink)}
+  .row select,.row input[type=text]{max-width:150px;min-width:0;border:1px solid var(--line);border-radius:6px;padding:3px 6px;background:#fff;font-size:12px}
+  .row input[type=range]{width:120px;accent-color:var(--accent)}
+  .row input[type=color]{width:34px;height:24px;border:1px solid var(--line);border-radius:6px;padding:1px;background:#fff}
+  .sw{position:relative;width:36px;height:20px;border-radius:999px;background:var(--line);border:0;cursor:pointer;flex:none;padding:0}
+  .sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}
+  .sw[aria-checked="true"]{background:var(--ok)} .sw[aria-checked="true"]::after{left:18px}
+  .sw:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .colors{display:flex;gap:6px;align-items:center}
+  .note{font-size:11px;color:var(--muted);padding:2px 0 4px}
+  .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s}
+  .toast.show{opacity:1}
+  .allrefs{margin-top:36px;padding-top:16px;border-top:1px dotted var(--line)}
+  .allrefs h3{font-family:var(--display);font-size:16px;margin:0 0 4px;font-weight:700}
+  .tbl{overflow-x:auto}
+  .allrefs table{border-collapse:collapse;width:100%;font-size:12.5px;margin-top:8px}
+  .allrefs th,.allrefs td{text-align:left;padding:6px 8px;border-bottom:1px dotted var(--line);vertical-align:top}
+  .allrefs th{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.06em}
+  .allrefs td .ch{display:block;font-size:11px;color:var(--muted)}
+  .allrefs tr.cur td{background:#fff}
+  footer{margin-top:36px;padding-top:12px;border-top:1px dotted var(--line);font-size:11px;color:var(--muted)}
+  @media (max-width:1040px){ .grid{grid-template-columns:minmax(0,1fr) 300px} .col.left{grid-column:1 / -1} .ref{grid-column:1} .plist{flex-direction:row;overflow-x:auto;padding-bottom:6px} .pt{flex:0 0 190px} }
+  @media (max-width:720px){ .grid{grid-template-columns:1fr} .col.right{order:3} .ref{order:4} }
+  @media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">Podcast Lookbook<small>ポッドキャスト動画の編集見本帳</small></div>
+    <h1>編集パターンを選んで、見え方を確かめる</h1>
+    <p class="lead">左でパターンを選び、右で字幕やロゴを調整すると、真ん中の絵がその場で変わります。決まったら「依頼文をコピー」。このページの状態はURLに入るので、URLを送れば同じ画面が開きます。</p>
+  </header>
+
+  <div class="grid">
+    <div class="col left">
+      <p class="label">パターン</p>
+      <div class="plist" id="plist"></div>
+    </div>
+
+    <div class="col mid">
+      <div class="ptitle"><h2 id="pName">—</h2><span class="desc" id="pDesc"></span></div>
+      <div class="tabs">
+        <span class="grp" id="shotTabs"><button type="button" data-shot="wide" aria-pressed="true">引き（2人）</button><button type="button" data-shot="close" aria-pressed="false">寄り（ゲスト）</button><button type="button" data-shot="solo" aria-pressed="false">1人（ホスト）</button></span>
+        <span class="grp" id="sceneTabs"><button type="button" data-scene="normal" aria-pressed="true">通常</button><button type="button" data-scene="emph" aria-pressed="false">強調テロップ</button><button type="button" data-scene="profile" aria-pressed="false">冒頭のプロフィール</button></span>
+      </div>
+      <div class="frame" id="frame">
+        <img class="shot" id="shotImg" alt="">
+        <div class="shot ph" id="shotPh"><div class="person a"></div><div class="person b"></div></div>
+        <div class="split" id="splitBox"><img id="splitA" alt=""><img id="splitB" alt=""></div>
+        <div class="ov" id="ovProf"></div>
+        <div class="ov" id="ovTitle"><span id="ovTitleText"></span></div>
+        <div class="ov" id="ovLogo">LOGO</div>
+        <div class="ov" id="ovName"></div>
+        <div class="ov" id="ovCap"></div>
+      </div>
+      <div class="under">
+        <button class="btn primary" type="button" id="btnCopy">依頼文をコピー</button>
+        <button class="btn" type="button" id="btnUrl">このURLを共有</button>
+        <label class="btn" for="fileIn">自分の画像を置く</label>
+        <input type="file" id="fileIn" accept="image/*" hidden>
+        <button class="btn" type="button" id="btnRef">参考動画を見る</button>
+        <span class="badge" id="digestBadge">冒頭ダイジェスト なし</span>
+        <span class="badge" id="camBadge">カメラ割り 自動切替</span>
+      </div>
+      <p class="hint">「自分の画像を置く」は今見ているショットの背景を、この画面の中だけで差し替えます。どこにも送信しません。</p>
+      <textarea class="copybox" id="copyBox" readonly aria-label="依頼文"></textarea>
+    </div>
+
+    <div class="col right">
+      <p class="label">調整</p>
+      <div class="panel" id="panel"></div>
+      <p class="hint">パターンを選び直すと、調整は初期値に戻ります。</p>
+    </div>
+
+    <div class="col ref" id="refBox">
+      <h3 id="refTitle">参考動画</h3>
+      <div class="meta" id="refMeta"></div>
+      <div class="seen" id="refSeen"></div>
+      <div class="yt" id="yt"></div>
+      <p class="hint">参考動画はYouTubeの公式埋め込みで、該当シーンから再生します。この見本帳の「型」は参考を手がかりに自前で再現したもので、参考動画と同じ素材・同じ出演者を使うものではありません。</p>
+    </div>
+  </div>
+
+  <section class="allrefs">
+    <h3>参考動画の一覧（10本）</h3>
+    <p class="hint">型がばらけるように選んでいます。差し替えたい番組があれば教えてください。リンクは該当シーンの秒数から開きます。</p>
+    <div class="tbl"><table id="allrefs"></table></div>
+  </section>
+
+  <footer>Podcast Lookbook v1（2026-10）。参考動画の著作権は各権利者に帰属します。プレビューの人物はAI生成の見本で、実在の人物ではありません。</footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+  // ---------- データ ----------
+  var SHOT_CAP = {
+    wide:  ["最初の1年は、とにかく人に会い続けました", "それが今の事業につながっているんですね"],
+    close: ["正直、最初の半年は売上ゼロでした"],
+    solo:  ["今日は、私が独立した理由をお話しします"]
+  };
+  var SHOT_EMPH = { wide:"人に会い続けた1年", close:"売上ゼロの半年", solo:"独立した理由" };
+  var SHOT_SPK  = { wide:[0,1], close:[1], solo:[0] };   // 行ごとの話者（0=ホスト, 1=ゲスト）
+  var SHOT_IMG  = { wide:"img/shot_wide.jpg", close:"img/shot_close.jpg", solo:"img/shot_solo.jpg" };
+
+  var FONTS = { mincho:"明朝", gothic:"ゴシック", maru:"丸ゴシック" };
+  var FONT_CSS = { mincho:"var(--f-mincho)", gothic:"var(--f-gothic)", maru:"var(--f-maru)" };
+
+  // 既定（どのパターンにも無い項目はこれ）
+  var BASE = {
+    cap:{on:true, font:"gothic", size:1.0, bottom:7, color:"#FFFFFF", spk:false, c1:"#FFFFFF", c2:"#FFF0A8", stroke:"thick", shadow:"soft", plate:"none", lines:2},
+    emph:{on:false, style:"big"},
+    title:{on:false, style:"band", pos:"tl", text:"第1回｜起業のきっかけ"},
+    logo:{on:true, pos:"tr", style:"plate", size:1.0},
+    name:{on:false, pos:"bl", style:"white"},
+    prof:{on:false, style:"white"},
+    digest:false, cam:"auto", bgm:"none"
+  };
+
+  // 10パターン（ref は参考動画。収集中のものは ref:null）
+  // ref: 参考動画（2026-10-13 時点で公開・埋め込み可を確認。該当シーンの秒数から再生）
+  var PATTERNS = [
+    {id:1, name:"ミニマル", desc:"字幕なし。ロゴだけで映像を見せる", ask:false,
+      ref:{id:"ippawzv5_bQ", start:90, program:"COTEN RADIO #94「諸君、狂いたまえ」高杉晋作", channel:"歴史を面白く学ぶコテンラジオ", seen:"字幕・タイトル・ロゴ・名前ラベルのどれも無し。固定1カメの引き画で3人が机に並んで話す。文字要素ゼロの型。"},
+      set:{cap:{on:false}, logo:{on:true,pos:"tr",style:"transparent"}}},
+    {id:2, name:"白ゴシック", desc:"太いゴシックの白字幕。黒縁、座布団なし", ask:false,
+      ref:{id:"ozZfcj6rEI8", start:90, program:"PIVOT TALK 投資家の思考法【中小企業には“経営がない”】中川政七", channel:"PIVOT 公式チャンネル", seen:"ゴシック太字の白字幕に細い黒縁、座布団なし、下部中央1行。右上に番組ロゴ。話題が変わる所では左上に紺の帯で話題タイトル。冒頭20秒のダイジェストだけ黒座布団。"},
+      set:{cap:{on:true,font:"gothic",stroke:"thick",shadow:"soft",plate:"none"}, logo:{on:true,pos:"tr",style:"plate"}}},
+    {id:3, name:"白明朝", desc:"極太明朝に柔らかい影。左上に話題タイトル", ask:false,
+      ref:{id:"hCYQprtIf6A", start:600, program:"崖っぷち#4【赤字1,000万超】亡き弟から会社を継いだ兄が明かす経営危機", channel:"青木康時〜100億達成までの全て〜", seen:"明朝体の白字幕に柔らかい黒い影、縁取りなし、座布団なし、下部中央1〜2行。左上に黒の半透明帯＋白明朝2行の話題タイトル、右上に章見出し。"},
+      set:{cap:{on:true,font:"mincho",stroke:"thin",shadow:"soft",plate:"none"}, emph:{on:true,style:"big"}, title:{on:true,style:"band",pos:"tl"}, logo:{on:true,pos:"tr",style:"plate"}}},
+    {id:4, name:"話者色分け", desc:"話す人ごとに字幕の色を変える", ask:false,
+      ref:{id:"dZPK26M2kqE", start:195, program:"令虎アフタートーク［成田 悠輔］虎の楽屋トーク", channel:"令和の虎CHANNEL", seen:"ゴシック太字に白縁の字幕で、話す人が変わると文字色が黄・マゼンタ・青・緑などに切り替わる。下部中央1〜2行、座布団なし。左上に番組ロゴ。色と話者の対応は映像から推定（要確認）。"},
+      set:{cap:{on:true,font:"gothic",stroke:"thick",shadow:"soft",plate:"none",spk:true,c1:"#FFFFFF",c2:"#FFF0A8"}, title:{on:true,style:"band",pos:"tl"}, logo:{on:true,pos:"tr",style:"plate"}}},
+    {id:5, name:"半透明黒帯", desc:"字幕の下に半透明の黒い帯。映画字幕のように", ask:false,
+      ref:{id:"-_3Ex9p_PSg", start:600, program:"ReHacQ【石丸伸二vs乙武洋匡】衝撃初対談", channel:"ReHacQ−リハック−【公式】", seen:"白ゴシック太字の字幕の下に、文字幅ぶんの黒い半透明ボックスを敷いて下部中央1行。右上に半透明帯の話題タイトル、左上に番組ロゴ。冒頭には超大型の白明朝の見出し演出もある。"},
+      set:{cap:{on:true,font:"gothic",stroke:"none",shadow:"none",plate:"band",size:0.9}, logo:{on:true,pos:"tr",style:"transparent"}}},
+    {id:6, name:"白座布団タイトル", desc:"左上に白い座布団と黒の太字。字幕は白ゴシック", ask:false,
+      ref:{id:"d8lu3GuuZK8", start:600, program:"新R25「病むくらいならコムドットを辞めてもいい。」やまと", channel:"新R25チャンネル", seen:"左上に白い座布団＋左端の赤い縦バー＋黒ゴシック太字の話題タイトルを常時表示（キーフレーズに黄色マーカー）。字幕は白ゴシック太字に黒縁、キーワードだけ黄色。右上に文字ロゴ。"},
+      set:{cap:{on:true,font:"gothic",stroke:"thick",shadow:"soft",plate:"none"}, title:{on:true,style:"white",pos:"tl"}, logo:{on:false}}},
+    {id:7, name:"キーワード強調＋冒頭ダイジェスト", desc:"蛍光マーカーでキーワードを強調。冒頭にハイライト", ask:false,
+      ref:{id:"OKPW93SOuL4", start:2, program:"UNPLUGGED PODCAST Ep.21「モノの価値は自由だ」", channel:"Unplugged podcast", seen:"冒頭の約60秒がハイライトのダイジェスト。2秒と25秒で蛍光グリーンの帯＋黒太字のキーワード強調。ダイジェスト中の字幕は白明朝と大きめの白ゴシックを話者の横に配置。本編は字幕なし。"},
+      set:{cap:{on:true,font:"gothic",stroke:"thick",shadow:"soft",plate:"none"}, emph:{on:true,style:"marker"}, logo:{on:true,pos:"tl",style:"transparent"}, digest:true}},
+    {id:8, name:"ネームプレート", desc:"名前と肩書のプレートを出す。登場時、または出し続ける", ask:false,
+      ref:{id:"5N6_z3gaXks", start:90, program:"TBS CROSS DIG 1on1 Podcastプロデューサー・野村高文", channel:"TBS CROSS DIG with Bloomberg", seen:"ゲストの登場時に、黒＋金の大きなロワーサード（名前・肩書・経歴）を左下に表示。右上に黒帯の話題タイトル（キーワードは金色）、左上にチャンネルロゴ。発言字幕はなし。プレートは冒頭だけで、常時表示ではない。"},
+      set:{cap:{on:true,font:"gothic",stroke:"thin",shadow:"soft",plate:"none",size:0.9}, name:{on:true,pos:"bl",style:"white"}, logo:{on:true,pos:"tr",style:"plate"}}},
+    {id:9, name:"大型2色テロップ", desc:"太い色縁の大きい字幕。要所は色を変える", ask:false,
+      ref:{id:"LJG3mbjhwfo", start:400, program:"【堀江の予言】2026年は”この職業”が終わります（年末トーク 桑田×堀江）", channel:"桑田龍征", seen:"大きめのゴシック極太・白文字に太い青縁と黒い影、下部中央1〜2行。1000秒付近は黄縁、1500秒付近は画面幅いっぱいの超大型と、縁の色と大きさで強弱を付ける。左上に多色の番組タイトル、右上に次の話題。"},
+      set:{cap:{on:true,font:"gothic",stroke:"thick",shadow:"hard",plate:"none",size:1.3,spk:true,c1:"#FFFFFF",c2:"#FFE033",lines:2}, emph:{on:true,style:"big"}, title:{on:true,style:"white",pos:"tl"}, logo:{on:true,pos:"tr",style:"plate"}}},
+    {id:10, name:"2分割／ワイプ", desc:"2人を同時に見せる画面レイアウト", ask:true,
+      ref:{id:"K7wOQ1dRNM4", start:90, program:"ReHacQ【中島聡vs天才AI技術者】８割が失業？民主主義に革命？", channel:"ReHacQ−リハック−【公式】", seen:"画面を左右2分割し、左にスタジオ、右にリモート出演者を常時同時表示。字幕は白ゴシック太字に黒縁で、分割をまたいで下部に1〜2行。右上にマゼンタの角丸座布団で話題。左上に番組ロゴ。ワイプ（小窓）の実例は未収集。"},
+      set:{cap:{on:true,font:"gothic",stroke:"thick",shadow:"soft",plate:"none"}, logo:{on:true,pos:"tr",style:"plate"}, cam:"split"}}
+  ];
+
+  // ---------- 状態 ----------
+  var state = { pattern:3, shot:"wide", scene:"normal", spec:null, custom:{} };
+  var $ = function(id){ return document.getElementById(id); };
+
+  function clone(o){ return JSON.parse(JSON.stringify(o)); }
+  function merge(base, over){
+    var out = clone(base);
+    Object.keys(over||{}).forEach(function(k){
+      if(over[k] && typeof over[k]==="object" && !Array.isArray(over[k])){ out[k] = Object.assign({}, out[k]||{}, over[k]); }
+      else out[k] = over[k];
+    });
+    return out;
+  }
+  function presetSpec(pid){
+    var p = PATTERNS.filter(function(x){return x.id===pid;})[0] || PATTERNS[0];
+    return merge(BASE, p.set);
+  }
+  function currentPattern(){ return PATTERNS.filter(function(x){return x.id===state.pattern;})[0]; }
+
+  // ---------- URL ----------
+  var KEYS = [
+    ["p", function(s){return state.pattern;}, function(v){ state.pattern = parseInt(v,10)||3; }],
+    ["sh", function(){return state.shot;}, function(v){ if(SHOT_CAP[v]) state.shot=v; }],
+    ["sc", function(){return state.scene;}, function(v){ if(["normal","emph","profile"].indexOf(v)>=0) state.scene=v; }]
+  ];
+  var FLAT = [ // [urlkey, path, type]
+    ["co","cap.on","b"],["cf","cap.font","s"],["cs","cap.size","n"],["cb","cap.bottom","n"],["cc","cap.color","s"],["ck","cap.spk","b"],["c1","cap.c1","s"],["c2","cap.c2","s"],["cst","cap.stroke","s"],["csh","cap.shadow","s"],["cp","cap.plate","s"],["cl","cap.lines","n"],
+    ["eo","emph.on","b"],["es","emph.style","s"],
+    ["to","title.on","b"],["ts","title.style","s"],["tp","title.pos","s"],["tt","title.text","s"],
+    ["lo","logo.on","b"],["lp","logo.pos","s"],["ls","logo.style","s"],["lz","logo.size","n"],
+    ["no","name.on","b"],["np","name.pos","s"],["ns","name.style","s"],
+    ["po","prof.on","b"],["ps","prof.style","s"],
+    ["dg","digest","b"],["cam","cam","s"],["bgm","bgm","s"]
+  ];
+  function getPath(o,p){ return p.split(".").reduce(function(a,k){ return a==null?a:a[k]; }, o); }
+  function setPath(o,p,v){ var ks=p.split("."), last=ks.pop(), t=ks.reduce(function(a,k){ if(!a[k]) a[k]={}; return a[k]; }, o); t[last]=v; }
+  function writeUrl(){
+    var q = new URLSearchParams();
+    KEYS.forEach(function(k){ q.set(k[0], String(k[1]())); });
+    var base = presetSpec(state.pattern);
+    FLAT.forEach(function(f){ var v=getPath(state.spec,f[1]), b=getPath(base,f[1]); if(v!==b){ q.set(f[0], f[2]==="b" ? (v?"1":"0") : String(v)); } });
+    try{ history.replaceState(null, "", "#"+q.toString()); }catch(_){}
+  }
+  function readUrl(){
+    var h = location.hash.replace(/^#/,""); if(!h) return false;
+    var q = new URLSearchParams(h);
+    KEYS.forEach(function(k){ if(q.has(k[0])) k[2](q.get(k[0])); });
+    state.spec = presetSpec(state.pattern);
+    FLAT.forEach(function(f){ if(q.has(f[0])){ var raw=q.get(f[0]); var v = f[2]==="b" ? raw==="1" : f[2]==="n" ? parseFloat(raw) : raw; if(f[2]!=="n" || !isNaN(v)) setPath(state.spec,f[1],v); } });
+    return true;
+  }
+
+  // ---------- パターン一覧 ----------
+  function renderList(){
+    var root=$("plist"); root.innerHTML="";
+    PATTERNS.forEach(function(p){
+      var b=document.createElement("button"); b.type="button"; b.className="pt"; b.setAttribute("aria-pressed", String(p.id===state.pattern));
+      b.innerHTML='<span class="num">'+p.id+'</span><span><span class="nm">'+esc(p.name)+'</span>'+(p.ask?'<span class="ask">要相談</span>':'')+'<span class="ds">'+esc(p.desc)+'</span></span>';
+      b.addEventListener("click", function(){ state.pattern=p.id; state.spec=presetSpec(p.id); renderAll(); });
+      root.appendChild(b);
+    });
+  }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+
+  // ---------- プレビュー ----------
+  var customImg = {}; // shot -> dataURL（この画面だけ）
+  function shotSrc(sh){ return customImg[sh] || SHOT_IMG[sh]; }
+  function renderPreview(){
+    var s=state.spec, sh=state.shot, sc=state.scene, fr=$("frame");
+    // 背景
+    var img=$("shotImg"), ph=$("shotPh");
+    img.onerror=function(){ img.style.display="none"; ph.style.display="block"; };
+    img.onload=function(){ img.style.display="block"; ph.style.display="none"; };
+    img.src=shotSrc(sh);
+    ph.innerHTML = sh==="wide" ? '<div class="person a"></div><div class="person b"></div>' : sh==="close" ? '<div class="person b" style="right:30%;width:40%;height:80%"></div>' : '<div class="person solo"></div>';
+    // 2分割
+    fr.classList.toggle("is-split", s.cam==="split");
+    $("splitA").src=shotSrc("solo"); $("splitB").src=shotSrc("close");
+    // 字幕
+    var cap=$("ovCap"); cap.className="ov"; cap.innerHTML="";
+    var showCap = s.cap.on && sc!=="profile";
+    if(showCap){
+      cap.classList.add("plate-"+s.cap.plate);
+      var fs = (5.8*s.cap.size); // cqh
+      cap.style.bottom = s.cap.bottom+"cqh";
+      cap.style.fontFamily = FONT_CSS[s.cap.font];
+      var stroke = s.cap.stroke==="none"?0 : s.cap.stroke==="thin"?0.06 : 0.11;
+      var shadow = s.cap.shadow==="none"?"none" : s.cap.shadow==="soft"?"0 0.25cqh 0.9cqh rgba(0,0,0,.75), 0 0 1.4cqh rgba(0,0,0,.45)" : "0.3cqw 0.5cqh 0 rgba(0,0,0,.9)";
+      var lines;
+      if(sc==="emph" && s.emph.on){
+        lines=[{t:SHOT_EMPH[sh], spk:SHOT_SPK[sh][0], emph:true}];
+      }else{
+        var raw=SHOT_CAP[sh].slice(0, s.cap.lines===1?1:2);
+        lines=raw.map(function(t,i){ return {t:t, spk:SHOT_SPK[sh][i]||0}; });
+      }
+      lines.forEach(function(l){
+        var d=document.createElement("span"); d.className="ln";
+        var size = l.emph ? (s.emph.style==="big" ? fs*2.1 : fs*1.5) : fs;
+        d.style.fontSize = size+"cqh";
+        var col = s.cap.spk ? (l.spk===1 ? s.cap.c2 : s.cap.c1) : s.cap.color;
+        d.style.color = col;
+        if(s.cap.plate==="white"){ stroke=0; shadow="none"; }
+        d.style.webkitTextStroke = stroke ? (stroke*size)+"cqh #111" : "0";
+        d.style.paintOrder="stroke fill";
+        d.style.textShadow = shadow;
+        if(l.emph && s.emph.style==="marker"){ d.innerHTML='<span class="mk">'+esc(l.t)+'</span>'; d.style.webkitTextStroke="0"; d.style.textShadow="none"; }
+        else d.textContent=l.t;
+        cap.appendChild(d);
+      });
+    }
+    // タイトル
+    var ti=$("ovTitle"); ti.className="ov";
+    if(s.title.on && sc!=="profile"){ ti.classList.add(s.title.style, s.title.pos); ti.style.fontSize="3.6cqh"; $("ovTitleText").textContent=s.title.text||""; ti.style.display="block"; } else ti.style.display="none";
+    // ロゴ
+    var lg=$("ovLogo"); lg.className="ov";
+    if(s.logo.on){ lg.classList.add(s.logo.style, s.logo.pos); lg.style.fontSize=(2.6*s.logo.size)+"cqh"; lg.style.display="block"; } else lg.style.display="none";
+    // 名前ラベル
+    var nm=$("ovName"); nm.className="ov";
+    if(s.name.on && sc!=="profile"){ nm.classList.add(s.name.style, s.name.pos); nm.innerHTML = sh==="solo" ? '山田 花子<small>ホスト｜株式会社サンプル 代表</small>' : '佐藤 太郎<small>ゲスト｜サンプル工業 取締役</small>'; nm.style.display="block"; } else nm.style.display="none";
+    // プロフィール場面
+    var pf=$("ovProf"); pf.className="ov";
+    if(sc==="profile"){
+      pf.classList.add(s.prof.style);
+      pf.innerHTML = s.prof.style==="timeline"
+        ? '<div class="pn">佐藤 太郎<small>サンプル工業 取締役</small></div><div class="pb">2012　大手メーカーに入社\n2018　家業のサンプル工業へ\n2023　取締役に就任\n2025　新規事業を立ち上げ</div>'
+        : '<div class="pn">佐藤 太郎<small>サンプル工業 取締役</small></div><div class="pb">大手メーカーを経て家業へ。\n製造業のDXと新規事業を担当。\n著書『小さな工場の大きな挑戦』</div>';
+      pf.style.display = s.prof.on ? "block" : "none";
+    } else pf.style.display="none";
+    // バッジ
+    $("digestBadge").textContent = "冒頭ダイジェスト "+(s.digest?"あり":"なし"); $("digestBadge").className="badge"+(s.digest?" on":"");
+    $("camBadge").textContent = "カメラ割り "+camLabel(s.cam);
+    // プレビューの場面タブ: プロフィールOFFなら注意
+    $("sceneTabs").querySelector('[data-scene="profile"]').style.opacity = s.prof.on ? "1" : ".45";
+    $("sceneTabs").querySelector('[data-scene="emph"]').style.opacity = s.emph.on ? "1" : ".45";
+  }
+  function camLabel(c){ return c==="auto"?"自動切替（話す人の寄り＋引き）" : c==="wide"?"引き固定" : "2分割（要相談）"; }
+  function bgmLabel(b){ return b==="none"?"なし" : b==="light"?"控えめに入れる" : "相談して決める"; }
+
+  // ---------- 参考動画 ----------
+  var ytLoaded=false;
+  function renderRef(){
+    var p=currentPattern(), r=p.ref;
+    $("refTitle").textContent = "参考動画："+p.name;
+    var yt=$("yt"); yt.innerHTML=""; yt.classList.remove("show"); ytLoaded=false;
+    if(r){
+      $("refMeta").textContent = r.program+"（"+r.channel+"）・"+fmt(r.start)+"〜";
+      $("refSeen").textContent = "画面で見えるもの: "+r.seen;
+      $("btnRef").disabled=false; $("btnRef").textContent="参考動画を見る";
+    }else{
+      $("refMeta").textContent = "参考動画は収集中です（10本を型がばらけるように選び、差し替えを受けます）。";
+      $("refSeen").textContent = "";
+      $("btnRef").disabled=true; $("btnRef").textContent="参考動画（収集中）";
+    }
+  }
+  function fmt(sec){ var m=Math.floor(sec/60), s=sec%60; return m+":"+(s<10?"0":"")+s; }
+  function renderAllRefs(){
+    var t=$("allrefs"); if(!t) return;
+    var h='<tr><th style="width:36px">#</th><th style="width:150px">型</th><th>番組</th><th style="width:110px">シーン</th></tr>';
+    PATTERNS.forEach(function(p){
+      var r=p.ref;
+      h+='<tr'+(p.id===state.pattern?' class="cur"':'')+'><td>'+p.id+'</td><td>'+esc(p.name)+(p.ask?' <span class="ask">要相談</span>':'')+'</td><td>'
+        +(r ? esc(r.program)+'<span class="ch">'+esc(r.channel)+'</span>' : '収集中')
+        +'</td><td>'+(r ? '<a href="https://www.youtube.com/watch?v='+encodeURIComponent(r.id)+'&t='+(r.start|0)+'s" target="_blank" rel="noopener">'+fmt(r.start)+'〜 を開く</a>' : '')+'</td></tr>';
+    });
+    t.innerHTML=h;
+  }
+  $("btnRef").addEventListener("click", function(){
+    var r=currentPattern().ref; if(!r) return;
+    var yt=$("yt");
+    if(!ytLoaded){ yt.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+encodeURIComponent(r.id)+'?start='+(r.start|0)+'&rel=0" title="参考動画" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>'; ytLoaded=true; }
+    yt.classList.toggle("show");
+    $("btnRef").textContent = yt.classList.contains("show") ? "参考動画を閉じる" : "参考動画を見る";
+    if(yt.classList.contains("show")) yt.scrollIntoView({behavior:"smooth", block:"nearest"});
+  });
+
+  // ---------- 調整パネル ----------
+  function ctl(def){ // def: {t:label, type:toggle|select|range|color|text, path, opts, min,max,step}
+    var row=document.createElement("div"); row.className="row";
+    var lab=document.createElement("label"); lab.textContent=def.t; row.appendChild(lab);
+    var v=def.path ? getPath(state.spec, def.path) : null, el;
+    if(def.type==="toggle"){
+      el=document.createElement("button"); el.type="button"; el.className="sw"; el.setAttribute("role","switch"); el.setAttribute("aria-checked", String(!!v)); el.setAttribute("aria-label",def.t);
+      el.addEventListener("click", function(){ setPath(state.spec,def.path,!getPath(state.spec,def.path)); renderAll(); });
+    }else if(def.type==="select"){
+      el=document.createElement("select"); el.setAttribute("aria-label",def.t);
+      def.opts.forEach(function(o){ var op=document.createElement("option"); op.value=o[0]; op.textContent=o[1]; if(String(v)===o[0]) op.selected=true; el.appendChild(op); });
+      el.addEventListener("change", function(){ setPath(state.spec,def.path,el.value); renderAll(); });
+    }else if(def.type==="range"){
+      el=document.createElement("input"); el.type="range"; el.min=def.min; el.max=def.max; el.step=def.step; el.value=v; el.setAttribute("aria-label",def.t);
+      el.addEventListener("input", function(){ setPath(state.spec,def.path,parseFloat(el.value)); renderPreview(); writeUrl(); });
+    }else if(def.type==="color"){
+      el=document.createElement("input"); el.type="color"; el.value=v; el.setAttribute("aria-label",def.t);
+      el.addEventListener("input", function(){ setPath(state.spec,def.path,el.value.toUpperCase()); renderPreview(); writeUrl(); });
+    }else if(def.type==="colors"){
+      el=document.createElement("span"); el.className="colors";
+      def.paths.forEach(function(pp,i){ var c=document.createElement("input"); c.type="color"; c.value=getPath(state.spec,pp); c.setAttribute("aria-label",def.names[i]); c.title=def.names[i]; c.addEventListener("input",function(){ setPath(state.spec,pp,c.value.toUpperCase()); renderPreview(); writeUrl(); }); el.appendChild(c); });
+    }else if(def.type==="text"){
+      el=document.createElement("input"); el.type="text"; el.value=v||""; el.setAttribute("aria-label",def.t);
+      el.addEventListener("input", function(){ setPath(state.spec,def.path,el.value); renderPreview(); writeUrl(); });
+    }
+    el.id="ctl-"+(def.path||def.paths.join("_")).replace(/\./g,"-"); row.appendChild(el); return row;
+  }
+  function section(title, on, rows, noteText){
+    var d=document.createElement("details"); d.open=true;
+    var sm=document.createElement("summary"); sm.innerHTML=esc(title)+'<span class="st">'+(on===null?"":(on?"あり":"なし"))+'</span>'; d.appendChild(sm);
+    rows.forEach(function(r){ d.appendChild(r); });
+    if(noteText){ var n=document.createElement("div"); n.className="note"; n.textContent=noteText; d.appendChild(n); }
+    return d;
+  }
+  var openState={};
+  function renderPanel(){
+    var s=state.spec, root=$("panel");
+    // 開閉状態を保つ
+    Array.prototype.forEach.call(root.querySelectorAll("details"), function(d,i){ openState[i]=d.open; });
+    root.innerHTML="";
+    var secs=[];
+    var capRows=[ctl({t:"字幕テロップ",type:"toggle",path:"cap.on"})];
+    if(s.cap.on){ capRows=capRows.concat([
+      ctl({t:"フォント",type:"select",path:"cap.font",opts:[["gothic","ゴシック"],["mincho","明朝"],["maru","丸ゴシック"]]}),
+      ctl({t:"大きさ",type:"range",path:"cap.size",min:0.7,max:1.5,step:0.05}),
+      ctl({t:"下端の位置",type:"range",path:"cap.bottom",min:3,max:22,step:1}),
+      ctl({t:"話す人で色分け",type:"toggle",path:"cap.spk"}),
+      s.cap.spk ? ctl({t:"色（ホスト／ゲスト）",type:"colors",paths:["cap.c1","cap.c2"],names:["ホストの色","ゲストの色"]}) : ctl({t:"文字色",type:"color",path:"cap.color"}),
+      ctl({t:"縁取り",type:"select",path:"cap.stroke",opts:[["none","なし"],["thin","細い"],["thick","太い"]]}),
+      ctl({t:"影",type:"select",path:"cap.shadow",opts:[["none","なし"],["soft","柔らかい"],["hard","くっきり"]]}),
+      ctl({t:"座布団",type:"select",path:"cap.plate",opts:[["none","なし"],["band","半透明の黒帯"],["white","白（黒文字）"]]}),
+      ctl({t:"最大行数",type:"select",path:"cap.lines",opts:[["1","1行"],["2","2行"]]})
+    ]); }
+    secs.push(section("字幕テロップ", s.cap.on, capRows));
+    var emRows=[ctl({t:"強調テロップ",type:"toggle",path:"emph.on"})];
+    if(s.emph.on) emRows.push(ctl({t:"見せ方",type:"select",path:"emph.style",opts:[["big","大きい文字"],["marker","蛍光マーカー"]]}));
+    secs.push(section("強調テロップ", s.emph.on, emRows, "要所のひと言を大きく出します。プレビューは上の「強調テロップ」タブで"));
+    var tiRows=[ctl({t:"話題タイトル",type:"toggle",path:"title.on"})];
+    if(s.title.on) tiRows=tiRows.concat([
+      ctl({t:"帯",type:"select",path:"title.style",opts:[["band","半透明グレー"],["white","白座布団"],["dark","黒座布団"]]}),
+      ctl({t:"位置",type:"select",path:"title.pos",opts:[["tl","左上"],["tr","右上"]]}),
+      ctl({t:"文言（見本）",type:"text",path:"title.text"})
+    ]);
+    secs.push(section("話題タイトル", s.title.on, tiRows, "話題が変わるごとに差し替えます"));
+    var lgRows=[ctl({t:"ロゴ",type:"toggle",path:"logo.on"})];
+    if(s.logo.on) lgRows=lgRows.concat([
+      ctl({t:"位置",type:"select",path:"logo.pos",opts:[["tr","右上"],["tl","左上"],["br","右下"],["bl","左下"]]}),
+      ctl({t:"見せ方",type:"select",path:"logo.style",opts:[["plate","白プレート"],["transparent","透過（白）"]]}),
+      ctl({t:"大きさ",type:"range",path:"logo.size",min:0.6,max:1.6,step:0.05})
+    ]);
+    secs.push(section("ロゴ", s.logo.on, lgRows, "見本は「LOGO」の文字。実際は番組やクライアントのロゴ画像"));
+    var nmRows=[ctl({t:"名前ラベル",type:"toggle",path:"name.on"})];
+    if(s.name.on) nmRows=nmRows.concat([
+      ctl({t:"位置",type:"select",path:"name.pos",opts:[["bl","左下"],["br","右下"]]}),
+      ctl({t:"見せ方",type:"select",path:"name.style",opts:[["white","白"],["dark","黒"]]})
+    ]);
+    secs.push(section("名前ラベル", s.name.on, nmRows));
+    var pfRows=[ctl({t:"プロフィール場面",type:"toggle",path:"prof.on"})];
+    if(s.prof.on) pfRows.push(ctl({t:"見せ方",type:"select",path:"prof.style",opts:[["white","白カード"],["dark","半透明黒"],["timeline","年表"]]}));
+    secs.push(section("冒頭のプロフィール場面", s.prof.on, pfRows, "冒頭で名前・肩書・経歴を数秒出します。プレビューは「冒頭のプロフィール」タブで"));
+    secs.push(section("冒頭ダイジェスト", s.digest, [ctl({t:"冒頭ダイジェスト",type:"toggle",path:"digest"})], "本編の見どころを60〜90秒にまとめて冒頭に置きます（絵の見本はありません）"));
+    secs.push(section("カメラ割り・音（文字の指定）", null, [
+      ctl({t:"カメラ割り",type:"select",path:"cam",opts:[["auto","自動切替"],["wide","引き固定"],["split","2分割（要相談）"]]}),
+      ctl({t:"BGM",type:"select",path:"bgm",opts:[["none","なし"],["light","控えめに入れる"],["ask","相談して決める"]]})
+    ], "ここは依頼文に文字で入ります。2分割は編集側で未対応のため、依頼時に相談扱いになります"));
+    secs.forEach(function(d,i){ if(openState[i]===false) d.open=false; root.appendChild(d); });
+  }
+
+  // ---------- 依頼文 ----------
+  function requestText(){
+    var s=state.spec, p=currentPattern();
+    var L=[];
+    L.push("【ポッドキャスト動画 編集依頼（Podcast Lookbook v1）】");
+    L.push("パターン: "+p.id+" "+p.name+(p.ask?"（要相談）":""));
+    if(s.cap.on){
+      L.push("字幕テロップ: あり／"+FONTS[s.cap.font]+"／大きさ "+Math.round(s.cap.size*100)+"%／下端から "+s.cap.bottom+"%／"
+        + (s.cap.spk ? "話す人で色分け（ホスト "+s.cap.c1+"・ゲスト "+s.cap.c2+"）" : "文字色 "+s.cap.color)
+        + "／縁取り "+({none:"なし",thin:"細い",thick:"太い"})[s.cap.stroke]+"／影 "+({none:"なし",soft:"柔らかい",hard:"くっきり"})[s.cap.shadow]
+        + "／座布団 "+({none:"なし",band:"半透明の黒帯",white:"白（黒文字）"})[s.cap.plate]+"／最大 "+s.cap.lines+"行");
+    } else L.push("字幕テロップ: なし");
+    L.push("強調テロップ: "+(s.emph.on ? "あり／"+(s.emph.style==="big"?"大きい文字":"蛍光マーカー") : "なし"));
+    L.push("話題タイトル: "+(s.title.on ? "あり／"+({band:"半透明グレーの帯",white:"白座布団",dark:"黒座布団"})[s.title.style]+"／"+(s.title.pos==="tl"?"左上":"右上") : "なし"));
+    L.push("ロゴ: "+(s.logo.on ? "あり／"+({tr:"右上",tl:"左上",br:"右下",bl:"左下"})[s.logo.pos]+"／"+(s.logo.style==="plate"?"白プレート":"透過")+"／大きさ "+Math.round(s.logo.size*100)+"%" : "なし"));
+    L.push("名前ラベル: "+(s.name.on ? "あり／"+(s.name.pos==="bl"?"左下":"右下")+"／"+(s.name.style==="white"?"白":"黒") : "なし"));
+    L.push("冒頭のプロフィール場面: "+(s.prof.on ? "あり／"+({white:"白カード",dark:"半透明黒",timeline:"年表"})[s.prof.style] : "なし"));
+    L.push("冒頭ダイジェスト: "+(s.digest?"あり":"なし"));
+    L.push("カメラ割り: "+camLabel(s.cam));
+    L.push("BGM: "+bgmLabel(s.bgm));
+    if(p.ref) L.push("参考動画: https://www.youtube.com/watch?v="+p.ref.id+"&t="+(p.ref.start|0)+"s （"+p.ref.program+"）");
+    L.push("Podcast Lookbook のURL: "+location.href);
+    L.push("");
+    L.push("--- style.json（Claude Code用） ---");
+    L.push(JSON.stringify({version:1, pattern:p.id, pattern_name:p.name, ref: p.ref ? {youtube_id:p.ref.id, start_sec:p.ref.start} : null, spec:s}, null, 2));
+    return L.join("\n");
+  }
+  function toast(msg){ var t=$("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toast._tm); toast._tm=setTimeout(function(){ t.classList.remove("show"); }, 1800); }
+  function copyText(text, okMsg){
+    var box=$("copyBox"); box.value=text; box.classList.add("show");
+    var done=function(){ toast(okMsg); };
+    var fallback=function(){ box.focus(); box.select(); toast("コピーできない環境です。下の文をそのまま選んでコピーしてください"); };
+    try{ if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done, fallback); } else fallback(); }catch(_){ fallback(); }
+  }
+  $("btnCopy").addEventListener("click", function(){ writeUrl(); copyText(requestText(), "依頼文をコピーしました。チャットに貼ってください"); });
+  $("btnUrl").addEventListener("click", function(){ writeUrl(); copyText(location.href, "URLをコピーしました"); });
+
+  // ---------- 自分の画像 ----------
+  $("fileIn").addEventListener("change", function(){
+    var f=this.files && this.files[0]; if(!f) return;
+    var rd=new FileReader(); rd.onload=function(){ customImg[state.shot]=rd.result; renderPreview(); toast("この画面の背景を差し替えました（送信はしていません）"); }; rd.readAsDataURL(f);
+    this.value="";
+  });
+
+  // ---------- タブ ----------
+  $("shotTabs").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b) return; state.shot=b.dataset.shot; renderTabs(); renderPreview(); writeUrl(); });
+  $("sceneTabs").addEventListener("click", function(e){ var b=e.target.closest("button"); if(!b) return; state.scene=b.dataset.scene; if(state.scene==="profile" && !state.spec.prof.on){ state.spec.prof.on=true; } if(state.scene==="emph" && !state.spec.emph.on){ state.spec.emph.on=true; } renderAll(); });
+  function renderTabs(){
+    Array.prototype.forEach.call($("shotTabs").querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", String(b.dataset.shot===state.shot)); });
+    Array.prototype.forEach.call($("sceneTabs").querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", String(b.dataset.scene===state.scene)); });
+  }
+
+  // ---------- 全体 ----------
+  function renderAll(){
+    var p=currentPattern();
+    $("pName").textContent = p.id+"　"+p.name; $("pDesc").textContent = p.desc;
+    renderList(); renderTabs(); renderPreview(); renderPanel(); renderRef(); renderAllRefs(); writeUrl();
+  }
+  if(!readUrl()){ state.spec=presetSpec(state.pattern); }
+  renderAll();
+  window.addEventListener("hashchange", function(){ if(readUrl()) renderAll(); });
+})();
+</script>
+</body>
+</html>
