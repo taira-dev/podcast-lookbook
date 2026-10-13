@@ -207,7 +207,7 @@
     <div class="tbl"><table id="allrefs"></table></div>
   </section>
 
-  <footer>Podcast Lookbook v1（2026-10）。参考動画の著作権は各権利者に帰属します。プレビューの人物とスタジオの見本はAI生成で、実在の人物ではありません。</footer>
+  <footer>Podcast Lookbook v1（2026-10）。参考動画の著作権は各権利者に帰属します。プレビューの人物はAI生成の見本で、実在の人物ではありません。</footer>
 </div>
 <div class="toast" id="toast"></div>
 
@@ -228,20 +228,14 @@
   // ---------- スタジオ（背景の見本。pos は object-position、prof はプロフィールカードを置く側） ----------
   // 引きの2人と寄りは同じ人物（AI生成）。split は引きと同じ左右の並び、pip はゲストの寄りにホストの小窓
   var STUDIOS = {
-    a: { label:"スタジオA（黒背景）", shots:{
+    a: { label:"スタジオA", shots:{
           wide:{src:"img/shot_wide.jpg", pos:"50% 50%", prof:"center"},
           close:{src:"img/shot_close.jpg", pos:"40% 50%", prof:"right"},
           solo:{src:"img/shot_solo.jpg", pos:"62% 50%", prof:"left"} },
          split:{ left:{shot:"close", pos:"42% 50%"}, right:{shot:"solo", pos:"60% 50%"} },
-         pip:{ main:{shot:"close", pos:"40% 50%"}, small:{shot:"solo", pos:"62% 50%"} } },
-    aikagi: { label:"AiKAGIスタジオ（白背景）", shots:{
-          wide:{src:"img/aikagi_wide.jpg", pos:"50% 50%", prof:"center"},
-          close:{src:"img/aikagi_close.jpg", pos:"55% 50%", prof:"left"},
-          solo:{src:"img/aikagi_solo.jpg", pos:"58% 50%", prof:"left"} },
-         split:{ left:{shot:"solo", pos:"58% 50%"}, right:{shot:"close", pos:"55% 50%"} },
-         pip:{ main:{shot:"close", pos:"55% 50%"}, small:{shot:"solo", pos:"58% 50%"} } }
+         pip:{ main:{shot:"close", pos:"40% 50%"}, small:{shot:"solo", pos:"62% 50%"} } }
   };
-  var STUDIO_ORDER = ["a", "aikagi"];
+  var STUDIO_ORDER = ["a"]; // スタジオが1つのときは切替欄を出さない（renderTabs）
 
   // ---------- 既定（どのパターンにも無い項目はこれ） ----------
   var BASE = {
@@ -637,6 +631,7 @@
   function renderTabs(){
     var stt=$("studioTabs");
     if(!stt.firstChild){ STUDIO_ORDER.forEach(function(k){ var b=document.createElement("button"); b.type="button"; b.dataset.studio=k; b.textContent=STUDIOS[k].label; b.addEventListener("click", function(){ state.studio=k; renderAll(); }); stt.appendChild(b); }); }
+    var one = STUDIO_ORDER.length<2; stt.hidden=one; stt.previousElementSibling.hidden=one;
     Array.prototype.forEach.call(stt.querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", String(b.dataset.studio===state.studio)); });
     Array.prototype.forEach.call($("shotTabs").querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", String(b.dataset.shot===state.shot)); });
     Array.prototype.forEach.call($("sceneTabs").querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", String(b.dataset.scene===state.scene)); });
